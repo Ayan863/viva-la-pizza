@@ -1,0 +1,35 @@
+@import url('https://fonts.cdnfonts.com/css/beyond-the-mountains');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+.MuiCard-vertical img {
+    transition: transform 1s ease-in-out;
+    border-radius: 50%;
+  }
+  
+  .MuiCard-vertical:hover .pizza {
+    transform: scale(1.1) rotate(90deg);
+  }
+  .MuiCard-vertical:hover img {
+    transform: scale(1.1);
+  }
+  .name{
+    font-size: 25px !important;
+    color: rgb(165, 59, 59) !important;
+    font-family: 'Beyond The Mountains', sans-serif !important;
+  }
+  .ingredients{
+    font-family: Poppins, sans-serif !important;
+    line-height: 1.42857143 !important;
+    font-size: 13px !important;
+  }
+  .price{
+    font-family: 'Beyond The Mountains', sans-serif !important;
+    color: rgb(165, 59, 59) !important;
+    font-size: 19px !important;
+
+  }
+  .start-from{
+    text-align: end;
+    width: 34%;
+    padding: 0 !important;
+  }

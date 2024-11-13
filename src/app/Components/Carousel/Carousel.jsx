@@ -6,8 +6,7 @@ import { Navigation, Scrollbar, A11y, Autoplay } from "swiper/modules";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { MdOutlineMenuBook } from "react-icons/md";
-
-// import "./styles.css";
+import "./carousel.css"
 const Carousel = () => {
   return (
     <>
@@ -32,7 +31,7 @@ const Carousel = () => {
             <source src="/pizza-video.mp4" type="video/mp4" />
           </video>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center space-y-4 bg-black bg-opacity-40">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center bg-black bg-opacity-40 gap-11">
             <h5 className="text-lg font-semibold font-open-sans">
               BEST IN TOWN
             </h5>
