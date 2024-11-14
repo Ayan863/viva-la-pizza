@@ -6,7 +6,7 @@ import { Navigation, Scrollbar, A11y, Autoplay } from "swiper/modules";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { MdOutlineMenuBook } from "react-icons/md";
-import "./carousel.css"
+import "./carousel.css";
 const Carousel = () => {
   return (
     <>
@@ -17,7 +17,6 @@ const Carousel = () => {
         slidesPerView={1}
         speed={1500}
         autoplay={{ delay: 11000, disableOnInteraction: false }}
-        // pagination={{ clickable: true }}
         loop={true}
       >
         <SwiperSlide>
@@ -36,50 +35,41 @@ const Carousel = () => {
               BEST IN TOWN
             </h5>
             <h1 className="text-4xl font-bold font-beyond">Pizza & Pasta</h1>
-            <button className="px-4 py-2 mt-4 bg-red-500 rounded-md hover:bg-red-600 flex items-center gap-1">
-            <MdOutlineMenuBook /> Today's Menu
-            </button>
+            
+            <button className="px-8 py-4 bg-red-600 text-white font-medium rounded-2xl hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg">
+        <FaShoppingCart /> Today's Menu
+      </button>
           </div>
         </SwiperSlide>
         <SwiperSlide>
           <img
-            src="https://dominospizza.az/static/media/create-your-own-banner.77d7e725.webp"
-            alt="make your own pizza"
-            className="h-[650px] relative"
+            src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/slider-02-1903x900.jpg"
+            alt=""
+            className="h-[650px] w-[100%]"
           />
-          <div className="absolute inset-0 flex flex-col items-end justify-center text-right p-6 bg-gray-900 bg-opacity-50 text-white rounded-lg">
-            <h5 className="text-lg font-semibold font-open-sans">
-              MAKE YOUR OWN PIZZA
-            </h5>
-            <button className="flex items-center px-4 py-2 mt-4 bg-red-500 rounded-md hover:bg-red-600 transition duration-300 ease-in-out">
-              <MdOutlineRestaurantMenu className="mr-2 text-xl" /> MAKE NOW
-            </button>
-          </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="all flex">
-            <img
-              src="https://dominospizza.az/static/media/earn-coins.9011d4f3.webp"
-              alt="order online"
-              className="h-[650px]"
-            />
-            <div className="text-end max-w-lg mx-auto flex flex-col items-end justify-center">
-              <h4 className="text-xl font-semibold text-red-500 mb-2">
-                REWARDS
-              </h4>
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                EARN POINTS EVERY TIME YOU ORDER ONLINE
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Great offer for pizza shoppers. Earn Domino's Pizza 'Reward
-                points' and translate them into unbelievable deals and
-                discounts. Hurry up, and grab your 'reward points' now.
-              </p>
-              <button className="px-6 py-3 bg-red-500 text-white font-medium rounded-md hover:bg-red-600 transition duration-300 flex gap-1 items-center">
-                <FaShoppingCart /> ORDER NOW
-              </button>
-            </div>
-          </div>
+        <div className="all bg-[url('https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/catalog/demo/banners/parallax-bg.jpg')] h-[650px] bg-cover bg-center">
+  <div className="flex justify-end w-[85%] items-center h-full px-8 text-right">
+    <div className="max-w-lg text-white p-8 backdrop-blur-lg bg-black/50 rounded-3xl shadow-lg w-[400px]">
+      <h4 className="text-xl font-semibold text-red-500 mb-3 uppercase tracking-wide text-start">
+        REWARDS
+      </h4>
+      <h2 className="text-4xl font-bold mb-6 leading-tight text-start">
+        {/* EARN POINTS EVERY TIME YOU ORDER ONLINE */}
+        Every Points Every Time You Order Online
+      </h2>
+      <p className="mb-8 text-lg font-light text-start ">
+        Great offer for pizza lovers. Earn Domino's Pizza 'Reward points' and turn them into amazing deals and discounts. Hurry up, and grab your 'reward points' now.
+      </p>
+      <button className="px-8 py-4 bg-red-600 text-white font-medium rounded-full hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg">
+        <FaShoppingCart /> ORDER NOW
+      </button>
+    </div>
+  </div>
+</div>
+
+
         </SwiperSlide>
       </Swiper>
     </>
