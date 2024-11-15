@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-// import { productSlice } from "../feature/product/productSlice";
-import productReducer from '../feature/product/productSlice'; 
-// ./feature/product/productSlice
+import ProductReducer from "../feature/product/ProductSlice";
+import MenuSlice from "../feature/menu/MenuSlice";
 
-export const store=configureStore({
-    reducer:{
-        product: productReducer
-    }
-})
+export const store = configureStore({
+  reducer: {
+    product: ProductReducer,
+    menu: MenuSlice
+  },
+});

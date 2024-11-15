@@ -13,18 +13,25 @@
     transform: scale(1.1);
   }
   .name{
-    font-size: 25px !important;
-    color: rgb(165, 59, 59) !important;
+    padding-bottom: 10px;
+    font-size: 30px !important;
+    color: rgb(129, 59, 59) !important;
     font-family: 'Beyond The Mountains', sans-serif !important;
   }
   .ingredients{
-    font-family: Poppins, sans-serif !important;
+    /* font-family: Poppins, sans-serif !important; */
     line-height: 1.42857143 !important;
-    font-size: 13px !important;
+    font-size: 15px !important;
+    font-style: italic;
+
   }
   .price{
     font-family: 'Beyond The Mountains', sans-serif !important;
     color: rgb(165, 59, 59) !important;
-    font-size: 19px !important;
+    font-size: 20px !important;
 
+  }
+  .start-from{
+    font-size: 15px !important;
+    font-style: italic;
   }

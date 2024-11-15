@@ -3,6 +3,8 @@ import "./globals.css";
 import Head from "next/head";
 import { store } from "./redux/app/store"; // Make sure this path is correct
 import { Provider } from "react-redux";
+import Header from "./Components/Header/Header";
+import Footer from "./Components/Footer/Footer";
 
 // export const metadata = {
 //   title: "Viva-La-Pizza",
@@ -20,7 +22,9 @@ export default function RootLayout({ children }) {
       </Head>
       <body>
         <Provider store={store}>
+        <Header/>
           {children}
+          <Footer/>
         </Provider>
       </body>
     </html>

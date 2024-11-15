@@ -1,18 +1,25 @@
 import "./card.css";
-import * as React from "react";
+import React, { useState } from "react";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import CardOverflow from "@mui/joy/CardOverflow";
 import Typography from "@mui/joy/Typography";
 import IconButton from "@mui/joy/IconButton";
 import Favorite from "@mui/icons-material/Favorite";
-import Modals from "../Modal/Modals"; // Modal bileşeninizin doğru yolu
+import Modals from "../Modal/Modals";
+import { FaShoppingCart } from "react-icons/fa";
 
-const CardComp = ({ type, price, ingredients, name, image ,id}) => {
-  const [isModalOpen, setModalOpen] = React.useState(false);
+const CardComp = ({ type, price, ingredients, name, image, id }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [count, setCount] = useState(1);
+  const [showCount, setShowCount] = useState(false);
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+
+  const handleAddToCartClick = () => {
+    setShowCount(true);
+  };
 
   return (
     <>
@@ -49,7 +56,7 @@ const CardComp = ({ type, price, ingredients, name, image ,id}) => {
             <Favorite />
           </IconButton>
         </CardOverflow>
-        <CardContent>
+        <CardContent className="flex flex-col items-start">
           <Typography level="title-md" className="name">
             {name}
           </Typography>
@@ -65,15 +72,69 @@ const CardComp = ({ type, price, ingredients, name, image ,id}) => {
           >
             {ingredients !== "-" ? ingredients : null}
           </Typography>
-          <Typography level="body-sm" className="price">{price}₼</Typography>
-          <Typography level="body-sm" className="start-from">{type === "pizza" ? "Small size" : type === "drinks" ? "200ml" : "220g"}</Typography>
+          <Typography level="body-sm" className="price">
+            {type != "sous" ? (
+              <>
+                {price.toFixed(2)}₼ / {(price * 1.2).toFixed(2)}₼ /{" "}
+                {(price * 2).toFixed(2)}₼
+              </>
+            ) : (
+              `${price.toFixed(2)}₼`
+            )}
+          </Typography>
+          <Typography level="body-sm" className="start-from">
+            {type === "pizza"
+              ? "Small / Middle / Large"
+              : type === "drinks"
+              ? "300ml / 500 / 1L"
+              : "220g"}
+          </Typography>
+          <div className="flex">
+            <button
+              // onClick={handleAddToCartClick}
+              onClick={() => {
+                handleAddToCartClick(); // Then call the function to show the count
+              }}
+              className="px-3 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg"
+            >
+              <FaShoppingCart /> ADD TO CART
+            </button>
+
+            {showCount && type !== "pizza" && (
+              <div className="count px-3 py-3 flex items-center">
+                <span
+                  onClick={() =>
+                    count > 0 ? setCount(count - 1) : setShowCount(false)
+                  }
+                  className="pointer bg-red-500 w-[10px] h-[10px] rounded-xl flex items-center justify-center p-4"
+                >
+                  -
+                </span>
+                <span>{count}</span>
+                <span
+                  onClick={() => setCount(count + 1)}
+                  className="pointer bg-red-500 w-[10px] h-[10px] rounded-xl flex items-center justify-center p-4"
+                >
+                  +
+                </span>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
 
-      <Modals open={type === "pizza" ? isModalOpen : false}  onClose={type === "pizza" ? handleCloseModal : null} type="pizza" status={status} price={price} ingredients={ingredients} name={name} image={image} id={id} />
+      <Modals
+        open={type === "pizza" ? isModalOpen : false}
+        onClose={type === "pizza" ? handleCloseModal : null}
+        type="pizza"
+        price={price}
+        ingredients={ingredients}
+        name={name}
+        image={image}
+        id={id}
+      />
     </>
   );
 };
-// 
 
 export default CardComp;

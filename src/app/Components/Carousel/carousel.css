@@ -1,5 +1,9 @@
 @import url('https://fonts.cdnfonts.com/css/beyond-the-mountains');
-
+.mySwiper{
+    background-image: url('https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/catalog/view/theme/OPCTM013/stylesheet/TemplateTrip/images/footer-bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 h1{
     font-family: 'Beyond The Mountains', sans-serif !important;
     font-size: 74px !important;
