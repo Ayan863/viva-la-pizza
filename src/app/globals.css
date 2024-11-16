@@ -1,14 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Oswald:wght@200..700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-*{
+
+* {
   margin: 0;
   padding: 0;
   text-decoration: none;
   box-sizing: border-box;
   list-style-type: none;
 }
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+.home-page {
+
+  .shop-now {
+    font-family: 'Beyond The Mountains', sans-serif !important;
+  }
+
+  .history {
+    h4 {
+      color: #ffc000;
+      display: inline-block;
+      float: none;
+      font: 400 104px / 61px "Herr Von Muellerhoff", Helvetica, sans-serif;
+      vertical-align: top;
+      width: 100%;
+    }
+
+    p {
+      color: #111111;
+      font: 500 40px / 45px "Oswald", sans-serif;
+      width: 100%;
+      text-transform: uppercase;
+    }
+
+    button {
+      background: #a41f1f none repeat scroll 0 0;
+      color: #ffffff;
+      display: inline-block;
+      float: none;
+      font: 500 14px / 16px "Mulish", sans-serif;
+      padding: 12px 20px;
+      position: relative;
+      vertical-align: top;
+      width: auto;
+      text-transform: capitalize;
+      border-radius: 24px;
+    }
+  }
 }

@@ -61,7 +61,7 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
             {name}
           </Typography>
           <Typography
-            className="ingredients"
+            className=""
             level="body-sm"
             sx={{
               whiteSpace: "nowrap",

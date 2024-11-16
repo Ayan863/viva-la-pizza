@@ -1,5 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Oswald:wght@200..700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+}
 footer{
     background-image: url('https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/catalog/view/theme/OPCTM013/stylesheet/TemplateTrip/images/footer-bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
+    font-family: "Mulish", Helvetica, sans-serif;
+    .info{
+
+        h4{
+            font: 400 30px/22px "Oswald", Helvetica, sans-serif;
+            padding-bottom: 16px;
+            color: white;
+            font-weight: 900;
+        }
+        a,p{
+            font: 400 17px/20px "Mulish", Helvetica, sans-serif;
+            color: white;
+        } 
+        a:hover{
+            color: #ffc000;
+        } 
+    }
+    .copyR a{
+        transition: all 0.7s;
+    }
+    .copyR a:hover{
+        color: #ffc000;
+    }
+        
 }
