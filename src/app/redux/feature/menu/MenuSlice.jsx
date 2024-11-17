@@ -8,7 +8,7 @@ const initialState = {
     },
     {
         id:2,
-        title:"Menu",
+        title:"Services",
         items:["pizza"]
 
     },{

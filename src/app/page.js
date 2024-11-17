@@ -1,4 +1,5 @@
 "use client";
+import  Login  from "./Pages/login/page";
 import Carousel from "./Components/Carousel/Carousel";
 import CarouselMini from "./Components/Carousel/CarouselMini";
 import OurMenuTab from "./Components/Tabs/OurMenuTab";
@@ -31,6 +32,7 @@ export default function Home() {
         "https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/5-home-default-870x564.jpg",
          "https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/1-home-default-870x564.jpg", 
          "https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/2-home-default-870x564.jpg"]} />
+      {/* <Login/> */}
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import { setActiveItem } from "@/app/redux/feature/menu/MenuSlice";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import Link from "next/link";
@@ -9,6 +9,12 @@ const Header = () => {
   const dispatch = useDispatch();
   const activeItem = useSelector((state) => state.menu.activeItem);
   const menuItems = useSelector((state) => state.menu.value);
+
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen((prev) => !prev);
+  };
 
   return (
     <header className='flex justify-center text-[#fff] font-["Oswald", Helvetica, sans-serif] '>
@@ -28,7 +34,7 @@ const Header = () => {
             >
               {item.title === "Home" ? (
                 <Link href="/">{item.title}</Link>
-              ) : item.title === "Menu" ? (
+              ) : item.title === "Services" ? (
                 <Link href="../../Pages/menu">{item.title}</Link>
               ) : (
                 <a href="#">{item.title}</a>
@@ -48,9 +54,21 @@ const Header = () => {
             </li>
           ))}
         </ul>
-        <div className="icons flex gap-3">
-          <FaUser />
+        <div className="icons flex gap-3 relative">
+          <FaUser onClick={toggleUserMenu} className="cursor-pointer" />
           <FaShoppingCart />
+
+          {isUserMenuOpen && (
+            <div className="userMenu absolute top-full mt-2 z-10 right-0 bg-white text-black rounded shadow-lg p-4">
+              <ul>
+                <li className="px-4 py-2 hover:bg-gray-200 text-[15px]">Wishlist</li>
+                <li className="px-4 py-2 hover:bg-gray-200 text-[15px]">Settings</li>
+                <li className="px-4 py-2  text-[15px]"> <Link className="hover:bg-gray-200 flex" href="../../Pages/login">Log In</Link></li>
+                <li className="px-4 py-2  text-[15px]"> <Link className="hover:bg-gray-200 flex" href="../../Pages/signup">Sign Up</Link></li>
+
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </header>

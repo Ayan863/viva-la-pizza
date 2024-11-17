@@ -44,7 +44,7 @@ const Carousel = () => {
         <SwiperSlide>
           <img
             src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/slider-02-1903x900.jpg"
-            alt=""
+            alt="pizza"
             className="h-[650px] w-[100%]"
           />
         </SwiperSlide>
@@ -56,7 +56,6 @@ const Carousel = () => {
         REWARDS
       </h4>
       <h2 className="text-4xl font-bold mb-6 leading-tight text-start">
-        {/* EARN POINTS EVERY TIME YOU ORDER ONLINE */}
         Every Points Every Time You Order Online
       </h2>
       <p className="mb-8 text-lg font-light text-start ">
