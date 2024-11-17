@@ -12,9 +12,10 @@ import { GrRestaurant } from "react-icons/gr";
 import { GiSaucepan } from "react-icons/gi";
 import { AspectRatio, Card, TabPanel, Typography } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
-import { getProduct } from "@/app/redux/feature/product/ProductSlice";
+// import { getProduct } from "@/app/redux/feature/product/ProductSlice";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
+import { getProduct } from "@/app/redux/feature/product/ProductSlice";
 
 const OurMenuTab = () => {
   const [index, setIndex] = React.useState(0);
