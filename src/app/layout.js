@@ -1,4 +1,5 @@
 "use client";
+
 import "./globals.css";
 import Head from "next/head";
 import { store } from "./redux/app/store"; // Make sure this path is correct

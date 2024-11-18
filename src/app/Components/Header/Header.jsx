@@ -11,7 +11,6 @@ const Header = () => {
   const menuItems = useSelector((state) => state.menu.value);
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-
   const toggleUserMenu = () => {
     setIsUserMenuOpen((prev) => !prev);
   };

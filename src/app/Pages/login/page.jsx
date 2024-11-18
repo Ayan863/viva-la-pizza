@@ -10,37 +10,42 @@ import { Alert, IconButton } from '@mui/joy';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import './login.css';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const Login = () => {
+  const [loginSuccess, setLoginSuccess] = useState(null);
   const [showError, setShowError] = useState({ name: true, password: true });
+  const router = useRouter();
 
-  // const submit = (value, action) => {
-    const submit = () => {
-      const [loginSuccess, setLoginSuccess] = useState(null); // Başlangıç durumu null
-      
-      const submit = (value, action) => {
-        setTimeout(() => {
-          axios.get("https://66eba35c2b6cf2b89c5b2596.mockapi.io/login")
-            .then((res) => {
-              let data = res.data;
-              const isitTrue = data.some(
-                (item) => item.name === value.name && item.password === value.password
-              );
-              
-              if (isitTrue) {
-                setLoginSuccess(true);
-                action.resetForm(); // Formu sıfırlıyoruz
-              } else {
-                setLoginSuccess(false);
-              }
-            })
-            .catch((error) => {
-              console.error("API Error:", error);
-              setLoginSuccess(false); // Hata durumunda giriş başarısız
-            });
-        }, 500);
-      };
-    }
+  const submit = (values, actions) => {
+    setTimeout(() => {
+      axios.get("https://66eba35c2b6cf2b89c5b2596.mockapi.io/login")
+        .then((res) => {
+          const data = res.data;
+          
+          // Find the user with matching name and password
+          const matchedUser = data.find(
+            (item) => item.name === values.name && item.password === values.password
+          );
+  
+          if (matchedUser) {
+            setLoginSuccess(true);
+            actions.resetForm();
+  
+            // Navigate to the user-specific page with the matched user's ID
+            router.push(`/${matchedUser.id}`);
+          } else {
+            setLoginSuccess(false);
+          }
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+          setLoginSuccess(false);
+        });
+    }, 500);
+  };
+  
 
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } = useFormik({
     initialValues: {
@@ -89,20 +94,20 @@ const Login = () => {
               </div>
               {errors.name && touched.name && showError.name && (
                 <Alert
-                  startDecorator={<WarningIcon />}
+                startDecorator={<WarningIcon />}
+                variant="soft"
+                color="danger"
+                endDecorator={
+                  <IconButton
                   variant="soft"
+                  size="m"
                   color="danger"
-                  endDecorator={
-                    <IconButton
-                      variant="soft"
-                      size="m"
-                      color="danger"
-                      onClick={() => handleCloseError('name')}
-                    >
+                  onClick={() => handleCloseError('name')}
+                  >
                       <CloseIcon />
                     </IconButton>
                   }
-                >
+                  >
                   {errors.name}
                 </Alert>
               )}
@@ -122,20 +127,20 @@ const Login = () => {
                     setShowError((prev) => ({ ...prev, password: true }));
                   }}
                   onBlur={handleBlur}
-                />
+                  />
               </div>
               {errors.password && touched.password && showError.password && (
                 <Alert
-                  startDecorator={<WarningIcon />}
+                startDecorator={<WarningIcon />}
+                variant="soft"
+                color="danger"
+                endDecorator={
+                  <IconButton
                   variant="soft"
+                  size="m"
                   color="danger"
-                  endDecorator={
-                    <IconButton
-                      variant="soft"
-                      size="m"
-                      color="danger"
-                      onClick={() => handleCloseError('password')}
-                    >
+                  onClick={() => handleCloseError('password')}
+                  >
                       <CloseIcon />
                     </IconButton>
                   }
@@ -143,15 +148,34 @@ const Login = () => {
                   {errors.password}
                 </Alert>
               )}
-            </div>
+            </div>{loginSuccess === false && (
+                    <Alert
+                      startDecorator={<WarningIcon />}
+                      variant="soft"
+                      color="danger"
+                      endDecorator={
+                        <IconButton
+                          variant="soft"
+                          size="m"
+                          color="danger"
+                          onClick={() => setLoginSuccess(null)}
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      }
+                    >
+                      Username or password is not correct.
+                    </Alert>
+                  )}
           </div>
           <div className="button">
             <div className="forgot">
-              <Link href="#">Forgot password?</Link>
               <button type="submit">LOGIN</button>
             </div>
+                  
           </div>
         </form>
+        
         <div className="about">
           <div className="social-media">
             <div className="icons">
@@ -166,7 +190,7 @@ const Login = () => {
               </div>
             </div>
             <div className="sign">
-              <Link href="./../signup/page">Or Sign Up</Link>
+              <Link href="./../../Pages/signup">Or Sign Up</Link>
             </div>
           </div>
         </div>
