@@ -6,6 +6,7 @@ import { store } from "./redux/app/store"; // Make sure this path is correct
 import { Provider } from "react-redux";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
+import { Toaster } from "react-hot-toast";
 
 // export const metadata = {
 //   title: "Viva-La-Pizza",
@@ -24,6 +25,8 @@ export default function RootLayout({ children }) {
       <body>
         <Provider store={store}>
         <Header/>
+        <Toaster position="top-center" />
+
           {children}
           <Footer/>
         </Provider>

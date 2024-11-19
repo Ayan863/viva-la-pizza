@@ -2,6 +2,7 @@ import { setActiveItem } from "@/app/redux/feature/menu/MenuSlice";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
+
 import Link from "next/link";
 import "./header.css";
 
@@ -11,12 +12,23 @@ const Header = () => {
   const menuItems = useSelector((state) => state.menu.value);
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const toggleUserMenu = () => {
-    setIsUserMenuOpen((prev) => !prev);
+  let hoverTimeout;
+
+  const handleMouseEnter = () => {
+    clearTimeout(hoverTimeout);
+    setIsUserMenuOpen(true);
   };
 
+  const handleMouseLeave = () => {
+    hoverTimeout = setTimeout(() => {
+      setIsUserMenuOpen(false); 
+    }, 200);
+  };
+
+  let data = JSON.parse(localStorage.getItem("user"));
+
   return (
-    <header className='flex justify-center text-[#fff] font-["Oswald", Helvetica, sans-serif] '>
+    <header className="flex justify-center text-[#fff] font-['Oswald', Helvetica, sans-serif]">
       <div className="flex items-center w-[70%] justify-between">
         <img
           src="./vivaLaPizza.png"
@@ -53,21 +65,64 @@ const Header = () => {
             </li>
           ))}
         </ul>
-        <div className="icons flex gap-3 relative">
-          <FaUser onClick={toggleUserMenu} className="cursor-pointer" />
-          <FaShoppingCart />
+        <div className="icons flex gap-3 items-center">
+          <div
+            className="icons flex gap-3 relative items-center justify-center"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <FaUser className="cursor-pointer" />
 
-          {isUserMenuOpen && (
-            <div className="userMenu absolute top-full mt-2 z-10 right-0 bg-white text-black rounded shadow-lg p-4">
-              <ul>
-                <li className="px-4 py-2 hover:bg-gray-200 text-[15px]">Wishlist</li>
-                <li className="px-4 py-2 hover:bg-gray-200 text-[15px]">Settings</li>
-                <li className="px-4 py-2  text-[15px]"> <Link className="hover:bg-gray-200 flex" href="../../Pages/login">Log In</Link></li>
-                <li className="px-4 py-2  text-[15px]"> <Link className="hover:bg-gray-200 flex" href="../../Pages/signup">Sign Up</Link></li>
-
-              </ul>
+            {isUserMenuOpen && (
+              <div className="userMenu absolute top-full mt-2 z-10 bg-white text-black rounded shadow-lg p-2">
+                <ul>
+                  <li className="px-4 py-2 hover:bg-gray-200 text-[15px]">
+                    <Link href="./../../Pages/wishlist">Wishlist</Link>
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-200 text-[15px]">
+                    Settings
+                  </li>
+                  {localStorage.getItem("user") ? (
+                    <li className="px-4 py-2 text-[15px]">
+                      <Link
+                        className="hover:bg-gray-200 flex"
+                        href="#"
+                        onClick={() => localStorage.clear()}
+                      >
+                        Log out
+                      </Link>
+                    </li>
+                  ) : (
+                    <>
+                      <li className="px-4 py-2 text-[15px]">
+                        <Link
+                          className="hover:bg-gray-200 flex"
+                          href="../../Pages/login"
+                        >
+                          Log In
+                        </Link>
+                      </li>
+                      <li className="px-4 py-2 text-[15px]">
+                        <Link
+                          className="hover:bg-gray-200 flex"
+                          href="../../Pages/signup"
+                        >
+                          Sign Up
+                        </Link>
+                      </li>
+                    </>
+                  )}
+                </ul>
+              </div>
+            )}
+          </div>
+          
+            <div>
+              <FaShoppingCart />
             </div>
-          )}
+            <div>
+            {localStorage.getItem("user") ? <>{data.money}₼</> : null}
+          </div>
         </div>
       </div>
     </header>

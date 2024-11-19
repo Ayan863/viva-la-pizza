@@ -8,18 +8,68 @@ import IconButton from "@mui/joy/IconButton";
 import Favorite from "@mui/icons-material/Favorite";
 import Modals from "../Modal/Modals";
 import { FaShoppingCart } from "react-icons/fa";
-
+import { toast } from "react-hot-toast";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 const CardComp = ({ type, price, ingredients, name, image, id }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [count, setCount] = useState(1);
   const [showCount, setShowCount] = useState(false);
-
+  const [isFavorite, setIsFavorite] = useState(false);
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
-
+   
   const handleAddToCartClick = () => {
     setShowCount(true);
   };
+
+  const handleFavoriteClick = (type, price, ingredients, name, image, id) => {
+    const storedUser = localStorage.getItem("user");
+  
+    let parsedUser;
+    try {
+      parsedUser = JSON.parse(storedUser);
+    } catch (error) {
+      toast.error("Error parsing user data:", error);
+      return;
+    }
+  
+    const storedFavorites = parsedUser.wishlist || [];
+    const itemIndex = storedFavorites.findIndex((item) => item.id === id);
+  
+    // Toggle favorite status and update localStorage
+    if (itemIndex === -1) {
+      const updatedFavorites = [
+        ...storedFavorites,
+        { type, price, ingredients, name, image, id },
+      ];
+      parsedUser.wishlist = updatedFavorites;
+      setIsFavorite(true);
+      toast.success("Item is added to the wishlist.");
+    } else {
+      const updatedFavorites = storedFavorites.filter((item) => item.id !== id);
+      parsedUser.wishlist = updatedFavorites;
+      setIsFavorite(false);
+      toast.success("Item is removed from the wishlist.");
+    }
+  
+    // Save updated user data in localStorage
+    localStorage.setItem("user", JSON.stringify(parsedUser));
+  
+    // Make API call to update the user data on the server
+    axios
+      .put(`https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`, {
+        wishlist: parsedUser.wishlist,
+      })
+      .then((response) => {
+        console.log("Wishlist updated on server:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating wishlist on server:", error);
+        toast.error("Failed to update wishlist on the server.");
+      });
+  };
+  
 
   return (
     <>
@@ -43,7 +93,6 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
             aria-label="Like minimal photography"
             size="md"
             variant="solid"
-            color="danger"
             sx={{
               position: "absolute",
               zIndex: 2,
@@ -51,6 +100,16 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
               right: "1rem",
               bottom: 0,
               transform: "translateY(50%)",
+              color: isFavorite ? "#FF0000" : "#fff",
+              background: isFavorite ? "#FFECEC" : "#CC0000",
+              "&:hover": {
+                background: isFavorite ? "#FFECEC" : "#CC0000",
+                color: isFavorite ? "#FF0000" : "#fff",
+              },
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleFavoriteClick(type, price, ingredients, name, image, id);
             }}
           >
             <Favorite />
@@ -91,9 +150,8 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
           </Typography>
           <div className="flex">
             <button
-              // onClick={handleAddToCartClick}
               onClick={() => {
-                handleAddToCartClick(); // Then call the function to show the count
+                handleAddToCartClick();
               }}
               className="px-3 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg"
             >

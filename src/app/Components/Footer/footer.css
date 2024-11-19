@@ -9,6 +9,9 @@ footer{
     background-size: cover;
     background-repeat: no-repeat;
     font-family: "Mulish", Helvetica, sans-serif;
+    img{
+        object-fit: cover;
+    }
     .info{
 
         h4{

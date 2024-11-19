@@ -69,7 +69,6 @@ const TabPanels = () => {
       name !== "all"
         ? value.filter((item) => item.type.toLowerCase() == name.toLowerCase())
         : value;
-    console.log("Filtered Items:", filteredItems);
     return (
       <div className="flex flex-wrap gap-2">
         {filteredItems.length > 0 ? (

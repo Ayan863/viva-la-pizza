@@ -5,7 +5,6 @@ import CarouselMini from "./Components/Carousel/CarouselMini";
 import OurMenuTab from "./Components/Tabs/OurMenuTab";
 import "./globals.css"
 export default function Home() {
-//  yuxaridaki myapp porejecti nedi tam olaraq? indi görürəm bilmirəm ki fayllar arasinda qarisiqliq var deye deployda err olur
   return (
     <section className="home-page">
       <Carousel />
@@ -32,7 +31,6 @@ export default function Home() {
         "https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/5-home-default-870x564.jpg",
          "https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/1-home-default-870x564.jpg", 
          "https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/2-home-default-870x564.jpg"]} />
-      {/* <Login/> */}
     </section>
   );
 }

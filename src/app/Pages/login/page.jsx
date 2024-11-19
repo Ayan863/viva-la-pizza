@@ -23,18 +23,18 @@ const Login = () => {
       axios.get("https://66eba35c2b6cf2b89c5b2596.mockapi.io/login")
         .then((res) => {
           const data = res.data;
-          
-          // Find the user with matching name and password
           const matchedUser = data.find(
             (item) => item.name === values.name && item.password === values.password
           );
+          localStorage.clear();
+          localStorage.setItem(`user`,JSON.stringify(matchedUser));
+          console.log("item=",matchedUser);
   
           if (matchedUser) {
             setLoginSuccess(true);
             actions.resetForm();
   
-            // Navigate to the user-specific page with the matched user's ID
-            router.push(`/${matchedUser.id}`);
+            router.push(`/`)
           } else {
             setLoginSuccess(false);
           }

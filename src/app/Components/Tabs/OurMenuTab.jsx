@@ -70,7 +70,6 @@ const OurMenuTab = () => {
       name !== "all"
         ? value.filter((item) => item.type.toLowerCase() == name.toLowerCase())
         : value;
-    console.log("Filtered Items:", filteredItems);
     return (
       <div className="flex flex-wrap gap-5 items-center justify-around">
         {filteredItems.length > 0 ? (
