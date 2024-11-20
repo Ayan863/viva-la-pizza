@@ -1,44 +1,38 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import './wishlist.css';
-import toast from 'react-hot-toast';
 import CardComp from '@/app/Components/Card/Card';
 
-const Page = () => {
-  const [wishlistData, setWishlistData] = useState(null);
+const page = () => {
+    const [basketData, setBasketData] = useState(null);
 
   useEffect(() => {
-    const updateWishlist = () => {
+    const updateBasket = () => {
       if (typeof window !== "undefined") {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
-          setWishlistData(parsedUser.wishlist || []);
+          setBasketData(parsedUser.basket || []);
         }
       }
     };
   
-    updateWishlist();
+    updateBasket();
   
-    window.addEventListener("storage", updateWishlist);
+    window.addEventListener("storage", updateBasket);
   
     return () => {
-      window.removeEventListener("storage", updateWishlist);
+      window.removeEventListener("storage", updateBasket);
     };
   }, []);
-  
-  
-
-  console.log("hello",wishlistData)
   return (
-    <section className='wishlist'>
-      <h4 className={wishlistData ? "text-center" : null}>Wishlist Page</h4>
+    <section className='basket'>
+      <h4 className={basketData ? "text-center" : null}>View card Page</h4>
       {
-        wishlistData ? (<div className='flex w-full items-center justify-center'>
+        basketData ? (<div className='flex w-full items-center justify-center'>
             <div className='flex flex-wrap gap-2 w-[90%]'>
             {
-            wishlistData.map((item) => (
+            basketData.map((item) => (
               <CardComp
                 key={item.id}
                 type={item.type}
@@ -63,7 +57,7 @@ const Page = () => {
         )
       }
     </section>
-  );
-};
+  )
+}
 
-export default Page;
+export default page

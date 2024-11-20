@@ -76,16 +76,16 @@ const Header = () => {
             {isUserMenuOpen && (
               <div className="userMenu absolute top-full mt-2 z-10 bg-white text-black rounded shadow-lg p-2">
                 <ul>
-                  <li className="px-4 py-2 hover:bg-gray-200 text-[15px]">
+                  <li className="px-4 py-2 hover:bg-gray-200 text-[15px] rounded">
                     <Link href="./../../Pages/wishlist">Wishlist</Link>
                   </li>
-                  <li className="px-4 py-2 hover:bg-gray-200 text-[15px]">
+                  <li className="px-4 py-2 hover:bg-gray-200 text-[15px] rounded">
                     Settings
                   </li>
                   {localStorage.getItem("user") ? (
-                    <li className="px-4 py-2 text-[15px]">
+                    <li className="text-[15px]">
                       <Link
-                        className="hover:bg-gray-200 flex"
+                        className="hover:bg-gray-200 flex px-4 py-2 rounded"
                         href="#"
                         onClick={() => localStorage.clear()}
                       >
@@ -94,20 +94,20 @@ const Header = () => {
                     </li>
                   ) : (
                     <>
-                      <li className="px-4 py-2 text-[15px]">
+                      <li className="text-[15px]">
                         <Link
-                          className="hover:bg-gray-200 flex"
+                          className="hover:bg-gray-200 flex px-4 py-2 rounded"
                           href="../../Pages/login"
                         >
-                          Log In
+                          Login
                         </Link>
                       </li>
-                      <li className="px-4 py-2 text-[15px]">
+                      <li className="text-[15px] ">
                         <Link
-                          className="hover:bg-gray-200 flex"
+                          className="hover:bg-gray-200 flex px-4 py-2 rounded"
                           href="../../Pages/signup"
                         >
-                          Sign Up
+                          Signup
                         </Link>
                       </li>
                     </>
@@ -118,7 +118,8 @@ const Header = () => {
           </div>
           
             <div>
-              <FaShoppingCart />
+            <Link href="./../../Pages/basket"><FaShoppingCart /></Link>
+              
             </div>
             <div>
             {localStorage.getItem("user") ? <>{data.money}₼</> : null}

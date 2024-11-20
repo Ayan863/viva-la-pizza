@@ -8,3 +8,57 @@
     color: rgb(165, 59, 59) !important;
     font-family: 'Beyond The Mountains', sans-serif !important;
 }
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.image{
+    right: 0;
+}
+.quantity-controls button {
+    padding: 5px 10px;
+    background-color: rgb(185 28 28 );
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.selection{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    p{
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-style: italic;
+        font-weight: 500;
+    }
+    .select{
+        .btn{
+            display: flex;
+            border-radius: 10px !important;
+            /* padding: 10px; */
+            width: 130px;
+            height: 65px;
+            gap: 5px;
+            .text{
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+                font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                p{
+                    font-size: 15px;
+                    font-style: italic;
+                }
+                span{
+                    font-size: 12px;
+                    font-style: italic;
+    
+                }
+            }
+        }
+        
+    }
+}
+
+
+  

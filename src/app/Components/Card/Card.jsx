@@ -11,21 +11,130 @@ import { FaShoppingCart } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+
 const CardComp = ({ type, price, ingredients, name, image, id }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [count, setCount] = useState(1);
-  const [showCount, setShowCount] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
-   
+
+  const [quantity, setQuantity] = useState(1); // Default quantity
+  const [showCount, setShowCount] = useState(false);
+
   const handleAddToCartClick = () => {
+    const storedUser = localStorage.getItem("user");
+    let parsedUser = storedUser ? JSON.parse(storedUser) : { basket: [] };
+
+    const itemIndex = parsedUser.basket.findIndex((item) => item.id === id);
+    if (itemIndex === -1) {
+      parsedUser.basket.push({
+        id,
+        name,
+        type,
+        price,
+        ingredients,
+        image,
+        quantity: quantity,
+        total: price * quantity,
+      });
+    } else {
+      parsedUser.basket[itemIndex].quantity += quantity;
+      parsedUser.basket[itemIndex].total =
+        parsedUser.basket[itemIndex].quantity * price;
+    }
+
+    localStorage.setItem("user", JSON.stringify(parsedUser));
+    setShowCount(true);
+    axios
+    .put(
+      `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
+      {
+        ...parsedUser, // parsedUser məlumatlarını göndəririk
+        basket: parsedUser.basket, // yenilənmiş basket-i göndəririk
+      }
+    )
+    .then((response) => {
+      toast.success("Item is added to the basket")
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
     setShowCount(true);
   };
 
+  const handleIncreaseQuantity = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+    updateBasketQuantity(1);
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+      updateBasketQuantity(-1);
+    } else {
+      removeItem();
+    }
+  };
+
+  const updateBasketQuantity = (amount) => {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) return;
+
+    const parsedUser = JSON.parse(storedUser);
+    const basket = parsedUser.basket || [];
+
+    const itemIndex = basket.findIndex((item) => item.id === id);
+    if (itemIndex !== -1) {
+      basket[itemIndex].quantity += amount;
+      basket[itemIndex].total = basket[itemIndex].quantity * price;
+    }
+
+    parsedUser.basket = basket;
+    localStorage.setItem("user", JSON.stringify(parsedUser));
+    axios.put(
+      `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
+      {
+        ...parsedUser, // parsedUser məlumatlarını göndəririk
+        basket: parsedUser.basket, // yenilənmiş basket-i göndəririk
+      }
+    )
+    .then((response) => {
+      // toast.success("Basket's updated")
+    })
+    .catch((error) => {
+      toast.error("Something went wrong.");
+    });
+  };
+
+  const removeItem = () => {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) return;
+
+    const parsedUser = JSON.parse(storedUser);
+    const updatedBasket = parsedUser.basket.filter((item) => item.id !== id);
+
+    parsedUser.basket = updatedBasket;
+    localStorage.setItem("user", JSON.stringify(parsedUser));
+    axios
+    .put(
+      `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
+      {
+        ...parsedUser, // parsedUser məlumatlarını göndəririk
+        basket: parsedUser.basket, // yenilənmiş basket-i göndəririk
+      }
+    )
+    .then((response) => {
+      toast.success("Item is removed from the basket")
+    })
+    .catch((error) => {
+      toast.error("Something went wrong.")
+    });
+    setShowCount(false);
+  };
   const handleFavoriteClick = (type, price, ingredients, name, image, id) => {
     const storedUser = localStorage.getItem("user");
-  
+
     let parsedUser;
     try {
       parsedUser = JSON.parse(storedUser);
@@ -33,11 +142,10 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
       toast.error("Error parsing user data:", error);
       return;
     }
-  
+
     const storedFavorites = parsedUser.wishlist || [];
     const itemIndex = storedFavorites.findIndex((item) => item.id === id);
-  
-    // Toggle favorite status and update localStorage
+
     if (itemIndex === -1) {
       const updatedFavorites = [
         ...storedFavorites,
@@ -52,15 +160,18 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
       setIsFavorite(false);
       toast.success("Item is removed from the wishlist.");
     }
-  
-    // Save updated user data in localStorage
+
     localStorage.setItem("user", JSON.stringify(parsedUser));
-  
-    // Make API call to update the user data on the server
+
+    window.dispatchEvent(new Event("storage"));
+
     axios
-      .put(`https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`, {
-        wishlist: parsedUser.wishlist,
-      })
+      .put(
+        `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
+        {
+          wishlist: parsedUser.wishlist,
+        }
+      )
       .then((response) => {
         console.log("Wishlist updated on server:", response.data);
       })
@@ -69,7 +180,6 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
         toast.error("Failed to update wishlist on the server.");
       });
   };
-  
 
   return (
     <>
@@ -89,6 +199,7 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
                 : "object-cover p-5 max-h-[266px]"
             }
           />
+          {/* Favorite Button */}
           <IconButton
             aria-label="Like minimal photography"
             size="md"
@@ -115,12 +226,12 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
             <Favorite />
           </IconButton>
         </CardOverflow>
+
         <CardContent className="flex flex-col items-start">
           <Typography level="title-md" className="name">
             {name}
           </Typography>
           <Typography
-            className=""
             level="body-sm"
             sx={{
               whiteSpace: "nowrap",
@@ -132,7 +243,7 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
             {ingredients !== "-" ? ingredients : null}
           </Typography>
           <Typography level="body-sm" className="price">
-            {type != "sous" ? (
+            {type !== "sous" ? (
               <>
                 {price.toFixed(2)}₼ / {(price * 1.2).toFixed(2)}₼ /{" "}
                 {(price * 2).toFixed(2)}₼
@@ -148,34 +259,67 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
               ? "300ml / 500 / 1L"
               : "220g"}
           </Typography>
-          <div className="flex">
-            <button
-              onClick={() => {
-                handleAddToCartClick();
-              }}
-              className="px-3 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg"
-            >
-              <FaShoppingCart /> ADD TO CART
-            </button>
 
-            {showCount && type !== "pizza" && (
-              <div className="count px-3 py-3 flex items-center">
-                <span
-                  onClick={() =>
-                    count > 0 ? setCount(count - 1) : setShowCount(false)
-                  }
-                  className="pointer bg-red-500 w-[10px] h-[10px] rounded-xl flex items-center justify-center p-4"
+          <div className="flex">
+            {type != "pizza" ? (
+              !showCount ? (
+                // Sepete Ekle Butonu
+                <button
+                  onClick={handleAddToCartClick}
+                  className="px-3 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg"
                 >
-                  -
-                </span>
-                <span>{count}</span>
-                <span
-                  onClick={() => setCount(count + 1)}
-                  className="pointer bg-red-500 w-[10px] h-[10px] rounded-xl flex items-center justify-center p-4"
-                >
-                  +
-                </span>
-              </div>
+                  <FaShoppingCart /> ADD TO CART
+                </button>
+              ) : (
+                <div className="cart-item-controls">
+  <div className="quantity-controls">
+    <button
+      onClick={handleDecreaseQuantity}
+      className="bg-gray-200 px-2 py-1 rounded-l-lg hover:bg-gray-300 transition duration-300"
+    >
+      -
+    </button>
+    <span className="px-4">{quantity}</span>
+    <button
+      onClick={handleIncreaseQuantity}
+      className="bg-gray-200 px-2 py-1 rounded-r-lg hover:bg-gray-300 transition duration-300"
+    >
+      +
+    </button>
+  </div>
+  <button
+    onClick={removeItem}
+    className="delete-btn text-red-600 hover:text-red-800 ml-4 transition duration-300"
+  ></button>
+</div>
+
+                // Miktar Kontrolleri
+                // <div className="cart-item-controls">
+                //   <div className="quantity-controls">
+                //     <button
+                //       onClick={handleDecreaseQuantity}
+                //       className="bg-gray-200 px-2 py-1 rounded-l-lg hover:bg-gray-300"
+                //     >
+                //       -
+                //     </button>
+                //     <span className="px-4">{quantity}</span>
+                //     <button
+                //       onClick={handleIncreaseQuantity}
+                //       className="bg-gray-200 px-2 py-1 rounded-r-lg hover:bg-gray-300"
+                //     >
+                //       +
+                //     </button>
+                //   </div>
+                //   <button
+                //     onClick={removeItem}
+                //     className="delete-btn text-red-600 hover:text-red-800 ml-4"
+                //   ></button>
+                // </div>
+              )
+            ) : (
+              <button className="px-3 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg">
+                <FaShoppingCart /> ADD TO CART
+              </button>
             )}
           </div>
         </CardContent>
