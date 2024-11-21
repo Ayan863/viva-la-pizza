@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 // import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";
 import { getProduct } from "../../redux/feature/product/ProductSlice.js";
 import CardComp from "../Card/Card";
-import Skeleton from "@mui/joy/Skeleton";
-
+import Skeleton from "@mui/joy/Skeleton"; 
+// 1 dk gelirem tamam deploydaki xeta localstorageni gosterir harda istifade etmisen?
 const TabPanels = () => {
   const [index, setIndex] = React.useState(0);
   const colors = ["primary", "danger", "success", "warning"];
