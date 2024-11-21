@@ -1,5 +1,5 @@
 import { Modal, ModalClose, ModalDialog, Typography } from "@mui/joy";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./modal.css";
 import { FaShoppingCart } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -164,6 +164,14 @@ const Modals = ({
     });
     setShowCount(false);
   };
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      const itemExists = parsedUser.basket.some((item) => item.id === id);
+      setShowCount(itemExists);
+    }
+  }, [id]);
 
   return (
     <Modal open={open} onClose={onClose} className="modal">

@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 // import { getProduct } from "@/app/redux/feature/product/ProductSlice";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
-import { getProduct } from "@/app/redux/feature/product/ProductSlice";
-
+import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";
+// bumu
 const OurMenuTab = () => {
   const [index, setIndex] = React.useState(0);
   const colors = ["primary", "danger", "success", "warning"];
