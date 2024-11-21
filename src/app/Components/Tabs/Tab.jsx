@@ -12,7 +12,8 @@ import { GrRestaurant } from "react-icons/gr";
 import { GiSaucepan } from "react-icons/gi";
 import { AspectRatio, Card, TabPanel, Typography } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
-import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx"; //burdan basqa?
+// import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";
+import { getProduct } from "../../redux/feature/product/ProductSlice.jsx";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
 
