@@ -16,8 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
 // import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";//basqa hardasa productslice istifade
-import { getProduct } from "../../redux/feature/product/ProductSlice.jsx";//basqa hardasa productslice istifade
-// bumu
+import { getProduct } from "../../redux/feature/product/ProductSlice.js";//basqa hardasa productslice istifade
+// bumu reduxdaki hisseler eslinde js ile olsaydi yaxsi olardi cunki sadeca js emeliyyatlari var ama html de olsaydi onda jsx tamam?
 const OurMenuTab = () => {
   const [index, setIndex] = React.useState(0);
   const colors = ["primary", "danger", "success", "warning"];
