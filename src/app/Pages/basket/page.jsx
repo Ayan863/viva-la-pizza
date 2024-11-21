@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import CardComp from '@/app/Components/Card/Card';
 
