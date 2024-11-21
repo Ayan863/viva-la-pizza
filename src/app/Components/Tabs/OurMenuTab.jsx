@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { getProduct } from "@/app/redux/feature/product/ProductSlice";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
-import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";
+import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";//basqa hardasa productslice istifade olunub?
 // bumu
 const OurMenuTab = () => {
   const [index, setIndex] = React.useState(0);
