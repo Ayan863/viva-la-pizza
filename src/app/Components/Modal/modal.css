@@ -1,64 +1,74 @@
-.modal{
-    width: 650px !important;
-    /* text-align: center; */
+.modal {
+  width: 650px !important;
+  /* text-align: center; */
 }
-.name-modal{
-    padding-bottom: 10px !important;
-    font-size: 45px !important;
-    color: rgb(165, 59, 59) !important;
-    font-family: 'Beyond The Mountains', sans-serif !important;
+.name-modal {
+  padding-bottom: 10px !important;
+  font-size: 45px !important;
+  color: rgb(165, 59, 59) !important;
+  font-family: "Beyond The Mountains", sans-serif !important;
 }
 .quantity-controls {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
-.image{
-    right: 0;
+.image {
+  right: 0;
 }
 .quantity-controls button {
-    padding: 5px 10px;
-    background-color: rgb(185 28 28 );
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 5px 10px;
+  background-color: rgb(185 28 28);
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
 }
-.selection{
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    p{
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        font-style: italic;
-        font-weight: 500;
+.selection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  p {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol";
+    font-style: italic;
+    font-weight: 500;
+  }
+  .select {
+    .btn.selected,
+    .iconButton.selected {
+      background-color: #d5d2d2; /* Örneğin sarı bir arka plan */
+      border-radius: 5px;
     }
-    .select{
-        .btn{
-            display: flex;
-            border-radius: 10px !important;
-            /* padding: 10px; */
-            width: 130px;
-            height: 65px;
-            gap: 5px;
-            .text{
-                display: flex;
-                flex-direction: column;
-                align-items: start;
-                font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-                p{
-                    font-size: 15px;
-                    font-style: italic;
-                }
-                span{
-                    font-size: 12px;
-                    font-style: italic;
-    
-                }
-            }
+
+    /* Seçili öğe dışında kalanların şeffaf olmasını sağlama */
+    .btn:not(.selected),
+    .iconButton:not(.selected) {
+      background-color: transparent;
+    }
+    .btn {
+      display: flex;
+      border-radius: 10px !important;
+      /* padding: 10px; */
+      width: 130px;
+      height: 65px;
+      gap: 5px;
+      .text {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
+          "Segoe UI Emoji", "Segoe UI Symbol";
+        p {
+          font-size: 15px;
+          font-style: italic;
         }
-        
+        span {
+          font-size: 12px;
+          font-style: italic;
+        }
+      }
     }
+  }
 }
-
-
-  

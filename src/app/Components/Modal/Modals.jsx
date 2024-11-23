@@ -1,5 +1,5 @@
 import { Modal, ModalClose, ModalDialog, Typography } from "@mui/joy";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./modal.css";
 import { FaShoppingCart } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -24,34 +24,191 @@ const Modals = ({
   image,
   id,
 }) => {
-  const [quantity, setQuantity] = useState(1);
-  const [showCount, setShowCount] = useState(false);
-  const [value, setValue] = React.useState("small");
-  const [valueSlice, setValueSlice] = React.useState("regular");
-
-  const [dynamicPrice, setDynamicPrice] = React.useState(price);
-  const getSizePrice = (size) => {
-    if (size === "medium") return price * 1.2;
-    if (size === "large") return price * 2;
-    return price;
+  const storedUser = localStorage.getItem("user");
+  const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+  const isItemInBasket = parsedUser?.basket.some((item) => item.id === id);
+  const [showCount, setShowCount] = useState(isItemInBasket || false);
+  const [dynamicPrice, setDynamicPrice] = useState(price[0]);
+  const [basketCount, setBasketCount] = useState(0);
+  
+  const getInitialQuantity = () => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        const item = parsedUser.basket.find((item) => item.id === id);
+        return item ? item.quantity : 1; // Sepette varsa miktarını al, yoksa 1
+      }
+    } catch (error) {
+      console.error("Error reading from localStorage:", error);
+    }
+    return 1; // Hata durumunda varsayılan 1
+  };
+  const getInitialSize = () => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        const item = parsedUser.basket.find((item) => item.id === id);
+        return item ? item.size : "regular"; // Sepette varsa boyutunu al, yoksa "regular"
+      }
+    } catch (error) {
+      console.error("Error reading from localStorage:", error);
+    }
+    return "regular"; // Hata durumunda varsayılan değer
   };
 
-  const handleSizeChange = (event, newValue) => {
+  const [valueSlice, setValueSlice] = React.useState(getInitialSize); // Başlangıç değeri dinamik
+  const getInitialValue = () => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        const item = parsedUser.basket.find((item) => item.id === id);
+        return item ? item.size : "small"; // Sepette varsa boyutunu al, yoksa "small"
+      }
+    } catch (error) {
+      console.error("Error reading from localStorage:", error);
+    }
+    return "small"; // Hata durumunda varsayılan değer
+  };
+
+  const [value, setValue] = useState(getInitialValue);
+
+  const [quantity, setQuantity] = useState(getInitialQuantity);
+
+  const handleSizeChange = async (event, newValue) => {
     if (newValue !== null) {
       setValue(newValue);
-      setDynamicPrice(getSizePrice(newValue));
-    }
-  };
-  const handleSliceChange = (event, newValue) => {
-    if (newValue !== null) {
-      setValueSlice(newValue);
+      let newPrice;
+      switch (newValue) {
+        case "small":
+          newPrice = price[0];
+          break;
+        case "medium":
+          newPrice = price[1];
+          break;
+        case "large":
+          newPrice = price[2];
+          break;
+        default:
+          newPrice = 0; // Varsayılan fiyat
+      }
+      setDynamicPrice(newPrice);
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        const itemIndex = parsedUser.basket.findIndex((item) => item.id === id);
+
+        if (itemIndex !== -1) {
+          parsedUser.basket[itemIndex].size = newValue;
+          parsedUser.basket[itemIndex].price = newPrice;
+          parsedUser.basket[itemIndex].total = (quantity * newPrice).toFixed(2);
+          localStorage.setItem("user", JSON.stringify(parsedUser));
+
+          await updateUserBasketInAPI(parsedUser);
+        }
+      }
     }
   };
 
   const updatedPrice = () => {
     return (dynamicPrice * quantity).toFixed(2);
   };
- 
+  const removeItem = useCallback(async () => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) return;
+
+      const parsedUser = JSON.parse(storedUser);
+      const updatedBasket = parsedUser.basket.filter((item) => item.id !== id);
+
+      parsedUser.basket = updatedBasket;
+      localStorage.setItem("user", JSON.stringify(parsedUser));
+
+      await axios.put(
+        `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
+        { ...parsedUser, basket: parsedUser.basket }
+      );
+
+      toast.success("Item is removed from the basket");
+      setShowCount(false);
+    } catch (error) {
+      toast.error("Something went wrong.");
+    }
+  }, [id]);
+  const handleSliceChange = (event, newValue) => {
+    if (newValue !== null) {
+      setValueSlice(newValue);
+    }
+  };
+  const updateBasketQuantity = (change) => {
+    setBasketCount((prevCount) => prevCount + change);
+  };
+  const handleIncreaseQuantity = useCallback(async () => {
+    setQuantity((prevQuantity) => {
+      const newQuantity = prevQuantity + 1;
+
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        const itemIndex = parsedUser.basket.findIndex((item) => item.id === id);
+
+        if (itemIndex !== -1) {
+          parsedUser.basket[itemIndex].quantity = newQuantity;
+          parsedUser.basket[itemIndex].total = (
+            newQuantity * dynamicPrice
+          ).toFixed(2);
+          localStorage.setItem("user", JSON.stringify(parsedUser));
+          updateUserBasketInAPI(parsedUser);
+        }
+      }
+
+      return newQuantity;
+    });
+    updateBasketQuantity(1);
+  }, [id, dynamicPrice]);
+
+  const handleDecreaseQuantity = useCallback(() => {
+    setQuantity((prevQuantity) => {
+      if (prevQuantity > 1) {
+        const newQuantity = prevQuantity - 1;
+
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          const itemIndex = parsedUser.basket.findIndex(
+            (item) => item.id === id
+          );
+
+          if (itemIndex !== -1) {
+            parsedUser.basket[itemIndex].quantity = newQuantity;
+            parsedUser.basket[itemIndex].total = (
+              newQuantity * dynamicPrice
+            ).toFixed(2);
+            localStorage.setItem("user", JSON.stringify(parsedUser));
+          }
+        }
+
+        updateBasketQuantity(-1);
+        return newQuantity;
+      } else {
+        removeItem();
+        return prevQuantity;
+      }
+    });
+  }, [id, dynamicPrice, removeItem, updateBasketQuantity]);
+
+  const updateUserBasketInAPI = async (parsedUser) => {
+    try {
+      await axios.put(
+        `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
+        { ...parsedUser, basket: parsedUser.basket }
+      );
+    } catch (error) {
+      toast.error("Failed to sync with API.");
+    }
+  };
 
   const handleAddToCartClick = () => {
     const storedUser = localStorage.getItem("user");
@@ -63,115 +220,65 @@ const Modals = ({
         id,
         name,
         type,
-        price,
+        price: dynamicPrice,
         ingredients,
         image,
-        quantity: quantity,
-        total: price * quantity,
+        size: value,
+        quantity,
+        total: updatedPrice(),
       });
+      setBasketCount((prev) => prev + quantity);
     } else {
-      parsedUser.basket[itemIndex].quantity += quantity;
-      parsedUser.basket[itemIndex].total =
-        parsedUser.basket[itemIndex].quantity * price;
+      const quantityChange = quantity - parsedUser.basket[itemIndex].quantity;
+      parsedUser.basket[itemIndex].quantity = quantity;
+      parsedUser.basket[itemIndex].total = updatedPrice();
+      setBasketCount((prev) => prev + quantityChange);
     }
 
     localStorage.setItem("user", JSON.stringify(parsedUser));
-    axios
-    .put(
-      `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
-      {
-        ...parsedUser, // parsedUser məlumatlarını göndəririk
-        basket: parsedUser.basket, // yenilənmiş basket-i göndəririk
-      }
-    )
-    .then((response) => {
-      toast.success("Item is added to the basket")
-    })
-    .catch((error) => {
 
-      toast.error("Something went wrong");
-    });
+    axios
+      .put(
+        `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
+        {
+          ...parsedUser,
+          basket: parsedUser.basket,
+        }
+      )
+      .then(() => {
+        toast.success("Item is added to the basket");
+      })
+      .catch(() => {
+        toast.error("Something went wrong");
+      });
+
     setShowCount(true);
   };
 
-  const handleIncreaseQuantity = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
-    updateBasketQuantity(1);
-  };
-
-  const handleDecreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prevQuantity) => prevQuantity - 1);
-      updateBasketQuantity(-1);
-    } else {
-      removeItem();
-    }
-  };
-
-  const updateBasketQuantity = (amount) => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) return;
-
-    const parsedUser = JSON.parse(storedUser);
-    const basket = parsedUser.basket || [];
-
-    const itemIndex = basket.findIndex((item) => item.id === id);
-    if (itemIndex !== -1) {
-      basket[itemIndex].quantity += amount;
-      basket[itemIndex].total = basket[itemIndex].quantity * price;
-    }
-
-    parsedUser.basket = basket;
-    localStorage.setItem("user", JSON.stringify(parsedUser));
-    axios
-    .put(
-      `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
-      {
-        ...parsedUser,
-        basket: parsedUser.basket,
-      }
-    )
-    .then((response) => {
-      // toast.success("Basket's updated")
-    })
-    .catch((error) => {
-      toast.error("Something went wrong.");
-    });
-  };
-
-  const removeItem = () => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) return;
-
-    const parsedUser = JSON.parse(storedUser);
-    const updatedBasket = parsedUser.basket.filter((item) => item.id !== id);
-
-    parsedUser.basket = updatedBasket;
-    localStorage.setItem("user", JSON.stringify(parsedUser));
-    axios
-    .put(
-      `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
-      {
-        ...parsedUser, 
-        basket: parsedUser.basket,
-      }
-    )
-    .then((response) => {
-      toast.success("Item is removed from the basket")
-    })
-    .catch((error) => {
-      toast.error("Something went wrong.")
-    });
-    setShowCount(false);
-  };
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      const itemExists = parsedUser.basket.some((item) => item.id === id);
-      setShowCount(itemExists);
+      const itemIndex = parsedUser.basket.findIndex((item) => item.id === id);
+
+      if (itemIndex !== -1) {
+        setValue(itemIndex.size); // Boyutu ayarla
+
+        parsedUser.basket[itemIndex].quantity = quantity;
+        parsedUser.basket[itemIndex].total = (quantity * dynamicPrice).toFixed(
+          2
+        );
+        setValueSlice(parsedUser.basket[itemIndex].size); // Boyutu güncelle
+
+        localStorage.setItem("user", JSON.stringify(parsedUser));
+        setQuantity(parsedUser.basket[itemIndex].quantity);
+        setShowCount(true);
+        updateUserBasketInAPI(parsedUser);
+      } else {
+        setShowCount(false);
+      }
     }
-  }, [id]);
+  }, [quantity, dynamicPrice, id]);
 
   return (
     <Modal open={open} onClose={onClose} className="modal">
@@ -181,16 +288,14 @@ const Modals = ({
         variant="plain"
         className="modal"
         sx={{
-          position: "fixed" /* Ekranın üzərində */,
-          top: "50%" /* Yuxarıdan 50% məsafədə, ekranın ortasına */,
-          left: "50%" /* Soldan 50% məsafədə, ekranın ortasına */,
-          transform:
-            "translate(-50%, -50%)" /* Modalın tam olaraq ortalanmasını təmin edir */,
-          zIndex: 50 /* Modalın digər elementlərin üzərində olması üçün */,
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 50,
           maxWidth: "90%",
-          height:
-            "510px !important" /* Ekranın böyük olmasını qarşısını alır */,
-          width: "650px !important" /* Dinamik genişlik */,
+          height: "510px !important",
+          width: "650px !important",
         }}
       >
         <ModalClose />
@@ -204,7 +309,7 @@ const Modals = ({
             />
           </div>
 
-          <div className="z-10 bg-white  p-4">
+          <div className="z-10 bg-white p-4">
             <Typography level="title-lg" className="name-modal text-[16px]">
               {name}
             </Typography>
@@ -264,9 +369,11 @@ const Modals = ({
                   }}
                 >
                   <Button
-                    className="btn"
+                    key="small" // key ekleyin
+                    className={`btn ${value === "small" ? "selected" : ""}`}
                     value="small"
                     selected={value === "small"}
+                    onClick={() => handleSizeChange("small", price[0])}
                   >
                     <img
                       src="https://dominospizza.az/static/media/small.3c7b3f6b.webp"
@@ -275,13 +382,16 @@ const Modals = ({
                     />
                     <div className="text">
                       <p>Small</p>
-                      <span>{price.toFixed(2)}₼</span>
+                      <span>{price[0]}₼</span>
                     </div>
                   </Button>
                   <IconButton
-                    className="btn"
+                    key="medium" // key ekleyin
+
+                    className={`btn ${value === "medium" ? "selected" : ""}`}
                     value="medium"
                     selected={value === "medium"}
+                    onClick={() => handleSizeChange("medium", price[1])}
                   >
                     <img
                       src="https://dominospizza.az/static/media/medium.1852d9f7.webp"
@@ -290,13 +400,15 @@ const Modals = ({
                     />
                     <div className="text">
                       <p>Medium</p>
-                      <span>{(price * 1.2).toFixed(2)}₼</span>
+                      <span>{price[1]}₼</span>
                     </div>
                   </IconButton>
                   <IconButton
-                    className="btn"
+                    key="large" // key ekleyin
+                    className={`btn ${value === "large" ? "selected" : ""}`}
                     value="large"
                     selected={value === "large"}
+                    onClick={() => handleSizeChange("large", price[2])}
                   >
                     <img
                       src="https://dominospizza.az/static/media/large.bc36cb66.webp"
@@ -305,7 +417,7 @@ const Modals = ({
                     />
                     <div className="text">
                       <p>Large</p>
-                      <span>{(price * 2).toFixed(2)}₼</span>
+                      <span>{price[2]}₼</span>
                     </div>
                   </IconButton>
                 </ToggleButtonGroup>

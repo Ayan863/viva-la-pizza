@@ -82,7 +82,7 @@ const OurMenuTab = () => {
                     <span className="ingredients">{item.ingredients !== "-" ? item.ingredients : null}</span>
                 </div>
                 <div className="price">
-                    <span>{item.price.toFixed(2)}₼</span>
+                    <span>{(item.price[0] ? item.price[0].toFixed(2) : item.price.toFixed(2))}₼</span>
                 </div>
             </div>
             // <CardComp

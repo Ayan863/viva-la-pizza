@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination,Navigation, Scrollbar, A11y, Autoplay  } from 'swiper/modules';
 const CarouselMini = ({images}) => {
