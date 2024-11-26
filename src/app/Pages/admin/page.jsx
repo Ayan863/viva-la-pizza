@@ -4,7 +4,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import Dashboard from "../../Components/Dashboard/MainContent";
 import Clients from "../../Components/Tabs/Tab";
 import Orders from "../../Components/Carousel/Carousel";
-import Menus from "../../Components/Tabs/OurMenuTab";
+import Menus from "../../Components/Admin-menus/Menus";
 import DarkModeSwitch from "../../Components/DarkModeSwitch/DarkModeSwitch";
 import "./admin.css";
 

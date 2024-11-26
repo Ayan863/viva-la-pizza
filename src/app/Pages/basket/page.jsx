@@ -18,7 +18,7 @@ const Basket = () => {
     { option: "FREE!" },
     { option: "0%" },
   ];
-  const router = useRouter(); // useRouter hook'unu kullan
+  const router = useRouter();
 
   const [hasSpun, setHasSpun] = useState(false);
   const [mustSpin, setMustSpin] = useState(false);
@@ -92,13 +92,11 @@ const Basket = () => {
         console.error("Error updating user data on the server:", error);
       });
   };
-  const handleOrderClick = () => {
+  const handleOrderClick = async () => {
     const userData = JSON.parse(localStorage.getItem("user")) || { money: 0 };
     const userBalance = parseFloat(userData.money) || 0;
-    const discountedTotal = selectedPrize
-      ? formattedTotalPrice -
-        formattedTotalPrice * getNumericPrize(selectedPrize) * 0.01
-      : formattedTotalPrice;
+    const discountedTotal = formattedTotalPrice - 
+    formattedTotalPrice * getNumericPrize(selectedPrize) * 0.01;
 
     const newPrizeNumber = Math.floor(Math.random() * data.length);
     let percent = newPrizeNumber;
@@ -129,7 +127,11 @@ const Basket = () => {
             JSON.stringify({
               ...userData,
               money: updatedBalance,
-              orders: [...(userData.orders || []), ...cartItems],
+              orders: [{
+                items: cartItems,
+                spent: discountedTotal.toFixed(2),
+                date: new Date().toISOString(), 
+              },],
             })
           );
           const parsedUser = JSON.parse(localStorage.getItem("user"));
@@ -138,7 +140,11 @@ const Basket = () => {
               `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${parsedUser.id}`,
               {
                 money: updatedBalance,
-                orders: [...(userData.orders || []), ...cartItems],
+                orders: [{
+                  items: cartItems,
+                  spent: discountedTotal.toFixed(2),
+                  date: new Date().toISOString(), 
+                },],
               }
             )
             .then((response) => {
@@ -154,7 +160,7 @@ const Basket = () => {
           toast.success("Order successfully placed!");
           router.push("./../../Pages/delivery"); 
         }, 10000);
-      }, 20000);
+      }, 12000);
     } else {
       toast.error("Insufficient balance! Please top up your account.");
     }
@@ -265,7 +271,7 @@ const Basket = () => {
                   textColors={["#ffffff"]}
                   onStopSpinning={handleStopSpinning}
                   strokeWidth={0}
-                  shadowColor="none" /* Əgər mövcuddursa */
+                  shadowColor="none"
                   outerBorderColor={["#ccc"]}
                   outerBorderWidth={[0]}
                   innerBorderColor={["#f2f2f2"]}
