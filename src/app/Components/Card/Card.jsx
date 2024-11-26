@@ -429,7 +429,7 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
                 {price[0]}₼ / {price[1]}₼ /{price[2]}₼
               </>
             ) : (
-              <>{price[0]}₼</>
+              <>{updatedPrice()}₼</>
             )}
           </Typography>
           <Typography level="body-sm" className="start-from">

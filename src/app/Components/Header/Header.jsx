@@ -25,7 +25,17 @@ const Header = () => {
     }, 200);
   };
 
-  let data = JSON.parse(localStorage.getItem("user"));
+  let data = {}; 
+  const userData = localStorage.getItem("user");
+
+  // localStorage verisini parse etmeden önce kontrol et
+  if (userData && userData !== "undefined") {
+    try {
+      data = JSON.parse(userData); // Eğer geçerli bir veri varsa, parse et
+    } catch (e) {
+      console.error("Error parsing user data:", e); // Hata olursa logla
+    }
+  } 
 
   return (
     <header className="flex justify-center text-[#fff] font-['Oswald', Helvetica, sans-serif]">
@@ -82,7 +92,7 @@ const Header = () => {
                   <li className="px-4 py-2 hover:bg-gray-200 text-[15px] rounded">
                     Settings
                   </li>
-                  {localStorage.getItem("user") ? (
+                  {userData ? (
                     <li className="text-[15px]">
                       <Link
                         className="hover:bg-gray-200 flex px-4 py-2 rounded"
@@ -117,12 +127,11 @@ const Header = () => {
             )}
           </div>
           
-            <div>
+          <div>
             <Link href="./../../Pages/basket"><FaShoppingCart /></Link>
-              
-            </div>
-            <div>
-            {localStorage.getItem("user") ? <>{data.money}₼</> : null}
+          </div>
+          <div>
+            {userData ? <>{data.money}₼</> : null}
           </div>
         </div>
       </div>
@@ -131,3 +140,5 @@ const Header = () => {
 };
 
 export default Header;
+
+

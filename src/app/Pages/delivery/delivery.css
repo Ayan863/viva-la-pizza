@@ -1,0 +1,49 @@
+/* Ümumi konteyner */
+.delivery-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Başlıq */
+  .delivery-title {
+    text-align: center;
+    color: #333;
+  }
+  
+  /* Hissə başlıqları */
+  .section-title {
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  /* Sifariş xülasəsi */
+  .order-summary p,
+  .delivery-info p {
+    margin: 5px 0;
+  }
+  
+  /* Zaman sayacının dairəsi */
+  .timer-circle {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Zamanın mətni */
+  .timer-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  

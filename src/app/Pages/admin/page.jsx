@@ -1,133 +1,86 @@
 "use client";
-import WarningIcon from '@mui/icons-material/Warning';
-import CloseIcon from '@mui/icons-material/Close';
-import { FaFacebookF, FaTwitter, FaGoogle } from 'react-icons/fa';
-import { CiUser } from 'react-icons/ci';
-import { MdLockOutline } from 'react-icons/md';
-import { useFormik } from 'formik';
-import FormLogin from './FormLogin';
-import { Alert, IconButton } from '@mui/joy';
-import Link from 'next/link';
-import React from 'react';
-import './login.css';
+import React, { useState, useEffect } from "react";
+import Navbar from "../../Components/Navbar/Navbar";
+import Dashboard from "../../Components/Dashboard/MainContent";
+import Clients from "../../Components/Tabs/Tab";
+import Orders from "../../Components/Carousel/Carousel";
+import Menus from "../../Components/Tabs/OurMenuTab";
+import DarkModeSwitch from "../../Components/DarkModeSwitch/DarkModeSwitch";
+import "./admin.css";
 
-const Login = () => {
-  const submit = (value, action) => {
-    setTimeout(() => {
-      console.log(value);
-      action.resetForm();
-    });
+const Admin = () => {
+  const [isSidebarHidden, setSidebarHidden] = useState(window.innerWidth < 768);
+  const [isSearchFormVisible, setSearchFormVisible] = useState(false);
+  const [isDarkMode, setDarkMode] = useState(false);
+  const [activePage, setActivePage] = useState("dashboard");
+
+  // Ekran boyutuna göre sidebar görünümünü ayarlama
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 576) {
+        setSearchFormVisible(false);
+      }
+      setSidebarHidden(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Aktif sayfaya göre içerik render fonksiyonu
+  const renderContent = () => {
+    switch (activePage) {
+      case "dashboard":
+        return <Dashboard />;
+      case "Clients":
+        return <Clients />;
+      case "Orders":
+        return <Orders />;
+      case "Menus":
+        return <Menus />;
+      default:
+        return <div>Sayfa Bulunamadı</div>;
+    }
   };
 
-  const { values, errors, handleChange, handleSubmit } = useFormik({
-    initialValues: {
-      name: '',
-      password: '',
-    },
-    validationSchema: FormLogin,
-    onSubmit: submit,
-  });
-
   return (
-    <section className="card-Section">
-      <video
-            className="video w-full h-full object-cover"
-            autoPlay
-            loop
-            muted
-            suppressHydrationWarning
-          >
-            <source src="/pizza-video.mp4" type="video/mp4" />
-          </video>
-      <div className="card backdrop-blur-lg bg-black/50 shadow-lg">
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="type">
-            <div className="user-name">
-              <label htmlFor="name"><span>Username</span></label>
-              <div className="input anime">
-                <CiUser />
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="Type your username"
-                  value={values.name}
-                  onChange={handleChange}
-                />
-              </div>
-              {errors.name && (
-                <Alert
-                  startDecorator={<WarningIcon />}
-                  variant="soft"
-                  color="danger"
-                  endDecorator={
-                    <IconButton variant="soft" size="m" color="danger">
-                      <CloseIcon />
-                    </IconButton>
-                  }
-                >
-                  {errors.name}
-                </Alert>
-              )}
-            </div>
-            <div className="password">
-              <label htmlFor="password"><span>Password</span></label>
-              <div className="input">
-                <MdLockOutline />
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Type your password"
-                  value={values.password}
-                  onChange={handleChange}
-                />
-              </div>
-              {errors.password && (
-                <Alert
-                  startDecorator={<WarningIcon />}
-                  variant="soft"
-                  color="danger"
-                  endDecorator={
-                    <IconButton variant="soft" size="m" color="danger">
-                      <CloseIcon />
-                    </IconButton>
-                  }
-                >
-                  {errors.password}
-                </Alert>
-              )}
-            </div>
-          </div>
-          <div className="button">
-            <div className="forgot">
-              <Link href="#">Forgot password?</Link>
-              <button type="submit">LOGIN</button>
-            </div>
-          </div>
-        </form>
-        <div className="about">
-          <div className="social-media">            
-            <div className="icons">
-              <div className="facebook social">
-                <FaFacebookF className="fb media" />
-              </div>
-              <div className="twitter social">
-                <FaTwitter className="tw media" />
-              </div>
-              <div className="google social">
-                <FaGoogle className="g media" />
-              </div>
-            </div><div className="sign">
-            <Link href="./../signup/page">Or Sign Up</Link>
-          </div>
-          </div>
-          
-        </div>
-      </div>
-    </section>
+    <>
+      {/* Sidebar */}
+      <section id="sidebar" className={isSidebarHidden ? "hide" : ""}>
+        <a href="#" className="brand">
+          <span className="text p-3">Viva La Pizza</span>
+        </a>
+        <ul className="side-menu top">
+          {["dashboard", "Clients", "Orders", "Menus"].map((menu) => (
+            <li
+              key={menu}
+              className={activePage === menu ? "active" : ""}
+              onClick={() => setActivePage(menu)} // Aktif sayfayı güncelle
+            >
+              <a href="#">
+                <span className="text">
+                  {menu.charAt(0).toUpperCase() + menu.slice(1)}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Ana içerik */}
+      <section id="content">
+        <Navbar
+          toggleSidebar={() => setSidebarHidden((prev) => !prev)}
+          toggleSearchForm={() => setSearchFormVisible((prev) => !prev)}
+          isSearchFormVisible={isSearchFormVisible}
+        />
+        {renderContent()}
+      </section>
+
+      {/* Karanlık Mod Anahtarı */}
+      <DarkModeSwitch isDarkMode={isDarkMode} toggleDarkMode={setDarkMode} />
+    </>
   );
 };
 
-export default Login;
+export default Admin;

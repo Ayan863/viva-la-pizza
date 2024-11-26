@@ -1,13 +1,13 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination,Navigation, Scrollbar, A11y, Autoplay  } from 'swiper/modules';
-const CarouselMini = ({images}) => {
+const CarouselMini = ({images,sum}) => {
 
   return (
     <>
       <Swiper
       className="mySwipers"
-        slidesPerView={3}
+        slidesPerView={sum ? sum : 3}
         spaceBetween={30}
         pagination={{
           clickable: true,

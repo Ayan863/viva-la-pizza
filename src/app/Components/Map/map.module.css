@@ -1,0 +1,25 @@
+
+.mapWrap {
+    position: relative;
+    width: 200px;
+    height: 180px;
+  }
+  
+  .map {
+    position: absolute;
+    width: 260px;
+    height: 200px;
+  }
+  .leaflet-bottom{
+    display: none !important;
+  }
+.leaflet-control-attribution{
+  display: none !important;
+}
+.leaflet-control{
+  display: none !important;
+
+}
+  /* a{
+  } */
+  

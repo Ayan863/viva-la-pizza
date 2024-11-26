@@ -10,7 +10,15 @@
     max-width: 1200px;
     margin: 0 auto;
 }
-
+.cart-item {
+    transition: opacity 1s ease-out, transform 1s ease-out;
+  }
+  
+  .cart-item.fade-out {
+    opacity: 0;
+    transform: translateY(-20px); /* Yuxarı doğru yoxa çıxma effekti */
+  }
+  
 .breadcrumb {
     list-style: none;
     display: flex;

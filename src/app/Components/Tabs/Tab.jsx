@@ -14,16 +14,47 @@ import { AspectRatio, Card, TabPanel, Typography } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../../redux/feature/product/ProductSlice.js";
 import CardComp from "../Card/Card";
-import Skeleton from "@mui/joy/Skeleton"; 
+import Skeleton from "@mui/joy/Skeleton";
+import "./tab.css"
 const TabPanels = () => {
   const [index, setIndex] = React.useState(0);
   const colors = ["primary", "danger", "success", "warning"];
-  const dispatch = useDispatch();
   const { value, loading } = useSelector((state) => state.product);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [sortOrder, setSortOrder] = React.useState("asc");
+  const [sortType, setSortType] = React.useState("name"); // Default olaraq ada görə sıralama
 
+  const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(getProduct());
   }, [dispatch]);
+
+  const handleSearch = (items) => {
+    if (!searchTerm) return items;
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.ingredients.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const handleSort = (items) => {
+    const sortedItems = [...items];
+    sortedItems.sort((a, b) => {
+      if (sortType === "name") {
+        return sortOrder === "asc"
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      }
+      if (sortType === "price") {
+        const priceA = parseFloat(a.price[0]);
+        const priceB = parseFloat(b.price[0]);
+        return sortOrder === "asc" ? priceA - priceB : priceB - priceA;
+      }
+      return 0;
+    });
+    return sortedItems;
+  };
 
   const getApi = (name) => {
     if (loading) {
@@ -64,10 +95,13 @@ const TabPanels = () => {
       return <div>No items available.</div>;
     }
 
-    const filteredItems =
+    let filteredItems =
       name !== "all"
-        ? value.filter((item) => item.type.toLowerCase() == name.toLowerCase())
+        ? value.filter((item) => item.type.toLowerCase() === name.toLowerCase())
         : value;
+    filteredItems = handleSearch(filteredItems);
+    filteredItems = handleSort(filteredItems);
+
     return (
       <div className="flex flex-wrap gap-2">
         {filteredItems.length > 0 ? (
@@ -92,7 +126,7 @@ const TabPanels = () => {
 
   return (
     <Box
-      className="w-[100%]"
+      className="w-[100%] flex flex-col items-center justify-center"
       sx={{
         flexGrow: 1,
         m: -3,
@@ -103,6 +137,43 @@ const TabPanels = () => {
       }}
       style={{ "--colors-index": colors[index] }}
     >
+      <div className="flex w-[80%]">
+        <p className="menu-services flex w-full">Menu Services</p>
+        <div className="flex flex-col justify-end items-end mb-4 space-x-4 w-[100%] gap-2">
+          {/* Axtarış */}
+          <input
+            placeholder="Search by name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-[371px]"
+          />
+
+          {/* Sıralama */}
+          <div className="flex gap-2">
+          <select
+            placeholder="Sort by"
+            value={sortType}
+            onChange={(e) => setSortType(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-[184px] "
+          >
+            <option value="name">Name</option>
+            <option value="price">Price</option>
+          </select>
+
+          {/* Order */}
+          <select
+            placeholder="Order"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="px-4 py-2 border border-gray-300 w-[180px] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="asc">A-Z / Low to High</option>
+            <option value="desc">Z-A / High to Low</option>
+          </select>
+          </div>
+        </div>
+      </div>
+
       <Tabs
         size="lg"
         aria-label="Bottom Navigation"
@@ -111,8 +182,8 @@ const TabPanels = () => {
         sx={(theme) => ({
           p: 1,
           borderRadius: 16,
-          width: "89%", // Genişliyi 90% olaraq təyin edirik
-          mx: "auto", // Mərkəzləşdirmək üçün
+          width: "89%",
+          mx: "auto",
           boxShadow: theme.shadow.sm,
           "--joy-shadowChannel": theme.vars.palette[colors[index]].darkChannel,
           [`& .${tabClasses.root}`]: {
@@ -121,9 +192,7 @@ const TabPanels = () => {
             transition: "0.3s",
             fontWeight: "md",
             fontSize: "md",
-            [`&:not(.${tabClasses.selected}):not(:hover)`]: {
-              opacity: 0.7,
-            },
+            [`&:not(.${tabClasses.selected}):not(:hover)`]: { opacity: 0.7 },
           },
         })}
       >
@@ -140,7 +209,7 @@ const TabPanels = () => {
           >
             <ListItemDecorator>
               <GrRestaurant />
-            </ListItemDecorator>
+            </ListItemDecorator>{" "}
             All
           </Tab>
           <Tab
@@ -150,7 +219,7 @@ const TabPanels = () => {
           >
             <ListItemDecorator>
               <FaPizzaSlice />
-            </ListItemDecorator>
+            </ListItemDecorator>{" "}
             Pizzas
           </Tab>
           <Tab
@@ -160,7 +229,7 @@ const TabPanels = () => {
           >
             <ListItemDecorator>
               <RiDrinks2Fill />
-            </ListItemDecorator>
+            </ListItemDecorator>{" "}
             Drinks
           </Tab>
           <Tab
@@ -170,7 +239,7 @@ const TabPanels = () => {
           >
             <ListItemDecorator>
               <GiSaucepan />
-            </ListItemDecorator>
+            </ListItemDecorator>{" "}
             Sauce
           </Tab>
         </TabList>
