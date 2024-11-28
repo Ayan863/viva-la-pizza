@@ -32,11 +32,10 @@ const Basket = () => {
   }, []);
 
   const getNumericPrize = (prize) => {
-    const numericValue = parseFloat(
-      prize.replace("%", "").replace("FREE!", "100").replace("0%", "0")
-    );
-    return isNaN(numericValue) ? 0 : numericValue;
-  };
+    if (prize.includes("FREE!")) return 100;
+    if (prize.includes("%")) return parseFloat(prize.replace("%", ""));
+    return 0;
+};
   const handleStopSpinning = () => {
     setMustSpin(false);
     const selectedPrize = data[prizeNumber].option;
@@ -101,9 +100,9 @@ const Basket = () => {
     const newPrizeNumber = Math.floor(Math.random() * data.length);
     let percent = newPrizeNumber;
     setPrizeNumber(newPrizeNumber);
-    setMustSpin(true);
-
-    if (userBalance >= discountedTotal) {
+    
+    if (userBalance >= formattedTotalPrice) {
+      setMustSpin(true);
       setTimeout(() => {
         setCartItems((prevCart) =>
           prevCart.map((item) => ({ ...item, isFadingOut: true }))
@@ -163,6 +162,7 @@ const Basket = () => {
       }, 12000);
     } else {
       toast.error("Insufficient balance! Please top up your account.");
+      return;
     }
   };
 
@@ -301,9 +301,11 @@ const Basket = () => {
               <div className="summary-details">
                 <p>Sale: {selectedPrize || "Please spin"}</p>
                 <strong>Total</strong>
-                <del className={selectedPrize ? "line-through" : ""}>
+                {selectedPrize ? null : 
+                  <del>
                   {formattedTotalPrice}₼
                 </del>
+                }
                 <span>
                   {selectedPrize
                     ? `${(

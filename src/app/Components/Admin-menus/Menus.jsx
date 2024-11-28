@@ -30,11 +30,21 @@ import Skeleton from "@mui/joy/Skeleton";
 // import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";//basqa hardasa productslice istifade
 import {
   getProduct,
-  fetchProducts,
+  editProduct,
   deleteProduct,
   addProduct,
 } from "../../redux/feature/product/ProductSlice.js"; //basqa hardasa productslice istifade
 // bumu reduxdaki hisseler eslinde js ile olsaydi yaxsi olardi cunki sadeca js emeliyyatlari var ama html de olsaydi onda jsx tamam?
+export const setItemToLocalStorage = (key, data) => {
+  let existingData = JSON.parse(localStorage.getItem(key)) || [];
+
+  // Məhsul varsa, onu yeniləyirik
+  existingData = existingData.map((item) =>
+    item.id === data.id ? { ...item, ...data } : item
+  );
+
+  localStorage.setItem(key, JSON.stringify(existingData));
+};
 const OurMenuTab = () => {
   const [index, setIndex] = React.useState(0);
   const colors = ["primary", "danger", "success", "warning"];
@@ -43,11 +53,44 @@ const OurMenuTab = () => {
   const [localProducts, setLocalProducts] = React.useState([]);
   const reduxProducts = useSelector((state) => state.product.value);
   const [open, setOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState(null);
+  const [selectedItem, setSelectedItem] = React.useState({
+    id: '',
+    name: '',
+    type: '',
+    status: '',
+    price: [0],
+    ingredients: '',
+    image: ''
+  });
+  const safeValue = Array.isArray(value) ? value : [];
+  const price = selectedItem.price[0] !== undefined ? selectedItem.price[0] : 0;
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (selectedItem) { // Check if selectedItem exists
+      setSelectedItem((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+    const [createModalOpen, setCreateModalOpen] = React.useState(false);
+
+  // Funksiyalar
+
+  const handleCreateModalOpen = () => setCreateModalOpen(true);
+  const handleCreateModalClose = () => setCreateModalOpen(false);
+  const handleOpen = (item) => {
+    setSelectedItem(item);
+    setOpen(true);
+  };
 
   React.useEffect(() => {
-    dispatch(getProduct());
-  }, [dispatch]);
+    if (reduxProducts.length === 0) {
+      dispatch(getProduct());
+    }
+  }, [dispatch, reduxProducts]);
+
   const handleDelete = (id) => {
     const updatedProducts = localProducts.filter(
       (product) => product.id !== id
@@ -72,58 +115,109 @@ const OurMenuTab = () => {
       getProduct();
     }
   }, []);
+  const handleEditProduct = (e) => {
+    e.preventDefault();
+    
+    // Inputlardan verilən məlumatları götürürük
+    const updatedProduct = {
+      id: selectedItem.id,  // Redaktə edilən məhsulun ID-sini saxlayırıq
+      name: selectedItem.name,
+      type: selectedItem.type,
+      status: selectedItem.status,
+      price: selectedItem.price,
+      ingredients: selectedItem.ingredients,
+      image: selectedItem.image,
+    };
+  
+    // Redux əməliyyatını çağırırıq
+    dispatch(editProduct(updatedProduct))
+      .then(() => {
+        // Yeniləmə uğurla başa çatdıqda modalı bağlayırıq
+        setOpen(false);
+        // Məsələn, istifadəçiyə bildiriş göstərə bilərik
+      })
+      .catch((error) => {
+        // Hata baş verərsə, istifadəçiyə bildiriş göstəririk
+        console.error('Redaktə zamanı səhv:', error);
+      });
+  };
+  
+  
+  
   const handleAddProduct = (e) => {
     e.preventDefault();
-  
+
     const newProduct = {
       id: Date.now(), // Unikal ID üçün timestamp istifadə edə bilərsiniz
       name: e.target.name.value,
       ingredients: e.target.ingredients.value || "-",
-      price: parseFloat(e.target.price.value) || 0,
+      price: [parseFloat(e.target.price.value).toFixed(2)],
       image: e.target.image.value || "default-image.jpg",
       type: e.target.type.value || "other",
     };
-  
+
     // LocalStorage-ə əlavə et
     const updatedProducts = [...localProducts, newProduct];
     setLocalProducts(updatedProducts);
     saveToLocalStorage("products", updatedProducts);
-  
+
     // Redux vasitəsilə API-ə göndər
     dispatch(addProduct(newProduct));
-  
+
     // Input sahələrini sıfırla
     e.target.reset();
   };
-  const handleOpen = (item) => {
-    setSelectedItem(item);
-    setOpen(true);
-  };
+  const handleSaveChanges = (e) => {
+    e.preventDefault(); // Formun yenidən yüklənməsinin qarşısını alır
+    const { target } = e;
+    if (target) {
+      const updatedProduct = {
+        id: selectedItem.id, // Make sure selectedItem is not undefined
+        name: selectedItem.name,
+        type: selectedItem.type,
+        status: selectedItem.status,
+        price: parseFloat(target.price.value) || 0,
+        ingredients: selectedItem.ingredients,
+        image: selectedItem.image,
+      };
+  
+      dispatch(editProduct(updatedProduct))
+    
+    .then(() => {
+      // Uğurla yeniləndikdən sonra localStorage-da da saxlayın
+      const currentProducts = JSON.parse(localStorage.getItem("products")) || [];
+      const updatedProducts = currentProducts.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
+      );
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
 
+      // Uğurla yeniləndikdən sonra modalı bağlayın
+      setOpen(false);
+    })
+    .catch((error) => {
+      // Hata baş verərsə, bildiriş göstərin
+      console.error("Redaktə zamanı səhv:", error);
+    });
+  };
+}
+  
   // Modal bağlama funksiyası
   const handleClose = () => setOpen(false);
 
   // Form məlumatları üçün dəyişiklik
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setSelectedItem((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
   
-  
-//     // LocalStorage-ə əlavə et
-//     const updatedProducts = [...localProducts, newProduct];
-//     setLocalProducts(updatedProducts);
-//     saveToLocalStorage("products", updatedProducts);
-  
-//     // Redux vasitəsilə API-ə göndər
-//     dispatch(fetchProducts(newProduct));
-  
-//     // Input sahələrini sıfırla
-//     e.target.reset();
-//   };
+
+  //     // LocalStorage-ə əlavə et
+  //     const updatedProducts = [...localProducts, newProduct];
+  //     setLocalProducts(updatedProducts);
+  //     saveToLocalStorage("products", updatedProducts);
+
+  //     // Redux vasitəsilə API-ə göndər
+  //     dispatch(fetchProducts(newProduct));
+
+  //     // Input sahələrini sıfırla
+  //     e.target.reset();
+  //   };
   const getApi = (name) => {
     if (loading) {
       return (
@@ -189,17 +283,18 @@ const OurMenuTab = () => {
               <div className="price">
                 <span>
                   {item.price[0]
-                    ? item.price[0].toFixed(2)
-                    : item.price.toFixed(2)}
+                    ? item.price[0]
+                    : item.price}
                   ₼
                 </span>
               </div>
+              
+                <Button onClick={() => handleOpen(item)}>Edit</Button>
               <button
                 onClick={() => handleDelete(item.id)}
                 className="delete-btn bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
               >
                 <TiDelete />
-                <Button onClick={() => handleOpen(item)}>Edit</Button>
               </button>
             </div>
             // <CardComp
@@ -325,90 +420,143 @@ const OurMenuTab = () => {
             variant="outlined"
             color="neutral"
             startDecorator={<Add />}
-            onClick={() => setOpen(true)}
+            onClick={handleCreateModalOpen}
           >
             New Menu
           </Button>
           <Modal open={open} onClose={handleClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
-            padding: 4,
-            borderRadius: 2,
-            width: 400,
-            boxShadow: 24,
-          }}
-        >
-          {selectedItem && (
-            <div>
-              <Typography variant="h6" component="h2">
-                Edit Product
-              </Typography>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "white",
+                padding: 4,
+                borderRadius: 2,
+                // width: 400,
+                boxShadow: 24,
+              }}
+            >
+              {selectedItem && (
+                <div>
+                  <Typography variant="h6" component="h2">
+                    Edit Product
+                  </Typography>
 
-              <TextField
-                label="Name"
-                name="name"
-                value={selectedItem.name}
-                onChange={handleInputChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Ingredients"
-                name="ingredients"
-                value={selectedItem.ingredients}
-                onChange={handleInputChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Price"
-                name="price"
-                value={selectedItem.price}
-                onChange={handleInputChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Image URL"
-                name="image"
-                value={selectedItem.image}
-                onChange={handleInputChange}
-                fullWidth
-                margin="normal"
-              />
+                  <form
+                    onSubmit={(e) => {
+                      handleEditProduct(e);
+                      setOpen(false);
+                    }}
+                  >
+                    <Stack spacing={2}>
+                      <div className="flex gap-3">
+                        <div>
+                          <FormControl>
+                            <FormLabel>Type</FormLabel>
+                            <Input
+                              label="type"
+                              name="type"
+                              value={selectedItem.type}
+                              onChange={handleInputChange}
+                              fullWidth
+                              margin="normal"
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Status</FormLabel>
+                            <Input
+                              label="status"
+                              name="status"
+                              value={selectedItem.status}
+                              onChange={handleInputChange}
+                              fullWidth
+                              margin="normal"
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Price</FormLabel>
+                            <Input
+                              label="price"
+                              name="price"
+                              value={selectedItem.price}
+                              onChange={handleInputChange}
+                              fullWidth
+                              margin="normal"
+                            />
+                          </FormControl>
+                        </div>
+                        <div>
+                          <FormControl>
+                            <FormLabel>Ingredients</FormLabel>
+                            <Input
+                              label="ingredients"
+                              name="ingredients"
+                              value={selectedItem.ingredients}
+                              onChange={handleInputChange}
+                              fullWidth
+                              margin="normal"
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Name</FormLabel>
+                            <Input
+                              label="name"
+                              name="name"
+                              value={selectedItem.name}
+                              onChange={handleInputChange}
+                              fullWidth
+                              margin="normal"
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Image</FormLabel>
+                            <Input
+                              label="image"
+                              name="image"
+                              value={selectedItem.image}
+                              onChange={handleInputChange}
+                              fullWidth
+                              margin="normal"
+                            />
+                          </FormControl>
+                        </div>
+                      </div>
+                      {/* <Button type="submit" onclick={() => setOpen(false)}>
+                        Submit
+                      </Button> */}
+                  <Button
+                      onClick={(e) => {
+                        handleSaveChanges(e);
+                        setOpen(false);
+                      }}
+                    variant="contained"
+                    // color="primary"
+                    sx={{ marginTop: 2 }}
+                    type="submit"
+                  >
+                    Save Changes
+                  </Button>
+                    </Stack>
+                  </form>
 
-              {/* Save Button */}
-              <Button
-                onClick={() => {
-                  // Bu hissədə məlumatı API və ya local storage-a əlavə etmək üçün kod əlavə edə bilərsiniz
-                  setOpen(false);
-                }}
-                variant="contained"
-                color="primary"
-                sx={{ marginTop: 2 }}
-              >
-                Save Changes
-              </Button>
-            </div>
-          )}
-        </Box>
-      </Modal>
-          <Modal open={open} onClose={() => setOpen(false)}>
+                  {/* Save Button */}
+                </div>
+              )}
+            </Box>
+          </Modal>
+          <Modal open={createModalOpen} onClose={handleCreateModalClose}>
             <ModalDialog>
               <DialogTitle>Create new menu item</DialogTitle>
               <DialogContent>
                 Please fill in the information of the menu.
               </DialogContent>
               <form
-                 onSubmit={(e) => {
-                    handleAddProduct(e); // Məhsulu əlavə edən funksiya
-                    setOpen(false); // Modalı bağlamaq
-                  }}
+                onSubmit={(e) => {
+                  handleAddProduct(e);
+                  handleCreateModalClose(); // Modalı bağlamaq
+                }}
               >
                 <Stack spacing={2}>
                   <div className="flex gap-3">
@@ -444,19 +592,39 @@ const OurMenuTab = () => {
                     <div>
                       <FormControl>
                         <FormLabel>Ingredients</FormLabel>
-                        <Input name="ingredients" placeholder="Tomato sauce, mozzarella cheese" autoFocus required />
+                        <Input
+                          name="ingredients"
+                          placeholder="Tomato sauce, mozzarella cheese"
+                          autoFocus
+                          required
+                        />
                       </FormControl>
                       <FormControl>
                         <FormLabel>Name</FormLabel>
-                        <Input name="name" placeholder="Margherita" autoFocus required />
+                        <Input
+                          name="name"
+                          placeholder="Margherita"
+                          autoFocus
+                          required
+                        />
                       </FormControl>
                       <FormControl>
                         <FormLabel>Image</FormLabel>
-                        <Input name="image" placeholder="https://vivalapizza.az/upload/resize_cache/iblock/9c5/254_254_2/9c569f8bc8a550ac6d2df4ba7f00b077.png?1714726493144977" autoFocus required />
+                        <Input
+                          name="image"
+                          placeholder="https://vivalapizza.az/upload/resize_cache/iblock/9c5/254_254_2/9c569f8bc8a550ac6d2df4ba7f00b077.png?1714726493144977"
+                          autoFocus
+                          required
+                        />
                       </FormControl>
                     </div>
                   </div>
-                  <Button type="submit" onclick={() => setOpen(false)}>Submit</Button>
+                  <Button
+                    type="submit"
+                    onclick={() => handleCreateModalClose()}
+                  >
+                    Submit
+                  </Button>
                 </Stack>
               </form>
             </ModalDialog>

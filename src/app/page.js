@@ -9,19 +9,35 @@ export default function Home() {
     <section className="home-page">
       <Carousel />
       <div className="flex justify-center">
-        <div className="history  flex p-5 gap-5">
-          <div className="text w-[420px] gap-2 flex flex-col justify-center items-center text-center">
-            <h4>history</h4>
-            <p>Welcome to pizza</p>
-            <span>We would like to take this opportunity to welc House. We are offering a warm, friendly atmosphere with family and friends at any time oft</span>
-            <button>About Us</button>
-          </div>
-          <div className="flex gap-5">
-            <img src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/catalog/demo/banners/cms-img-02.jpg" alt="pizza" className="pb-6" />
-            <img src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/catalog/demo/banners/cms-img-01.jpg" alt="pizza" className="pt-6" />
-          </div>
-        </div>
-      </div>
+  <div className="history flex flex-col md:flex-row p-5 gap-5 items-center">
+    {/* Text Section */}
+    <div className="text w-full md:w-[420px] gap-2 flex flex-col justify-center items-center text-center">
+      <h4 className="text-lg font-semibold">History</h4>
+      <p className="text-gray-700">Welcome to Pizza</p>
+      <span className="text-gray-600 text-sm">
+        We would like to take this opportunity to welcome you to Pizza House. We are offering a warm, friendly atmosphere with family and friends at any time.
+      </span>
+      <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        About Us
+      </button>
+    </div>
+
+    {/* Images Section */}
+    <div className="flex gap-5 justify-center items-center">
+      <img
+        src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/catalog/demo/banners/cms-img-02.jpg"
+        alt="pizza"
+        className="w-28 h-28 md:w-40 md:h-40 lg:w-52 lg:h-52 object-cover pb-3 md:pb-6"
+      />
+      <img
+        src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/catalog/demo/banners/cms-img-01.jpg"
+        alt="pizza"
+        className="w-28 h-28 md:w-40 md:h-40 lg:w-52 lg:h-52 object-cover pt-3 md:pt-6"
+      />
+    </div>
+  </div>
+</div>
+
       <h4 className="shop-now text-[47px] text-center p-2 text-[#813b3b]">Our Menu</h4>
       <OurMenuTab />
       <CarouselMini

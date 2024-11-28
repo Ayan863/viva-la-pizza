@@ -45,40 +45,58 @@ export default function Delivery() {
   const [formData, setFormData] = useState({
     detailedAddress: "",
     phoneNumber: "",
+    location: null,
   });
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => {
       const updatedData = { ...prevData, [name]: value };
-      const allFieldsFilled =
-        updatedData.detailedAddress.trim() && updatedData.phoneNumber.trim();
-      setIsButtonDisabled(!allFieldsFilled);
+      validateForm(updatedData);
       return updatedData;
     });
   };
-  
+
+  const validateForm = (data) => {
+    const allFieldsFilled =
+      data.detailedAddress.trim() &&
+      data.phoneNumber.trim() &&
+      data.location !== null; // Ensure location is selected
+    setIsButtonDisabled(!allFieldsFilled);
+  };
+
+  const handleMapSelection = (location) => {
+    setFormData((prevData) => {
+      const updatedData = { ...prevData, location };
+      validateForm(updatedData);
+      return updatedData;
+    });
+  };
   useEffect(() => {
-  const allFieldsFilled =
-    formData.detailedAddress.trim() && formData.phoneNumber.trim();
-  setIsButtonDisabled(!allFieldsFilled);
-}, [formData]);
-useEffect(() => {
-  if (!randomSelected) {
-    const randomValue = Math.floor(Math.random() * (10 * 60));
-    setRandomTime(randomValue);
-    setTimeLeft(randomValue);
-    setRandomSelected(true);
-    console.log("Random value selected: ", randomValue);
-  }
-}, [randomSelected]);
+    const allFieldsFilled =
+      formData.detailedAddress.trim() && formData.phoneNumber.trim();
+    setIsButtonDisabled(!allFieldsFilled);
+  }, [formData]);
+  useEffect(() => {
+    if (!randomSelected) {
+      const randomValue = Math.floor(Math.random() * (10 * 60));
+      setRandomTime(randomValue);
+      setTimeLeft(randomValue);
+      setRandomSelected(true);
+      console.log("Random value selected: ", randomValue);
+    }
+  }, [randomSelected]);
+
   const handleButtonClick = () => {
     if (isButtonDisabled) {
       toast.error("Please fill all the fields before proceeding!");
     } else {
       setIsTimerActive(true);
       toast.success("Order processing started!");
+
+      
     }
   };
   useEffect(() => {
@@ -103,7 +121,7 @@ useEffect(() => {
   useEffect(() => {
     let interval;
 
-    if (timeLeft > 0) {
+    if (isTimerActive && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((prevTime) => {
           if (prevTime <= 1) {
@@ -116,7 +134,7 @@ useEffect(() => {
     }
 
     return () => clearInterval(interval);
-  }, [timeLeft]);
+  }, [isTimerActive, timeLeft])
 
   const handleTimeEnd = () => {
     console.log("Handle Time End: ", randomTime);
@@ -128,6 +146,7 @@ useEffect(() => {
         setTimeLeft(randomTime - 150);
       } else {
         toast.success("Your delivery is on time! Enjoy your meal.");
+        setIsTimerActive(false)
         setShowContent(true);
       }
     }, 2000);
@@ -135,6 +154,13 @@ useEffect(() => {
   if (!userData) {
     return <p>Loading...</p>;
   }
+  const groupedItems = userData.orders
+  .flatMap((order) => order.items)
+  .reduce((acc, item) => {
+    acc[item.type] = acc[item.type] || [];
+    acc[item.type].push(item.name);
+    return acc;
+  }, {});
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
   const radius = 50;
@@ -142,7 +168,7 @@ useEffect(() => {
   const offset = circumference - (timeLeft / (30 * 60)) * circumference;
 
   return (
-    <section>
+    <section className="delivery">
       <Toaster />
 
       <div
@@ -160,16 +186,25 @@ useEffect(() => {
         <div className="flex">
           <div className="personal info">
             <div>
-              <h3>Your Order Summary</h3>
+              
               <div>
-                <h3>Delivery Information</h3>
-                <p>
-                  <strong>Deivery:</strong>{" "}
-                  {userData.orders
-                    .flatMap((order) => order.items) // orders içindəki items massivlərini düzləşdiririk
-                    .map((item) => item.name) // hər bir item-ın adını alırıq
-                    .join(", ")}
-                </p>
+                <div>
+                {groupedItems.pizza && (
+  <p>
+    <strong>Pizza:</strong> {groupedItems.pizza.join(" ")}
+  </p>
+)}
+{groupedItems.drinks && (
+  <p>
+    <strong>Drinks:</strong> {groupedItems.drinks.join(" ")}
+  </p>
+)}
+{groupedItems.sous && (
+  <p>
+    <strong>Sous:</strong> {groupedItems.sous.join(" ")}
+  </p>
+)}
+                </div>
               </div>
             </div>
             <div>
@@ -177,48 +212,57 @@ useEffect(() => {
                 <strong>Name:</strong> {userData.name}
               </p>
               <p>
-              <label>
-          Phone Number:
-          <input
-            type="tel"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleInputChange}
-          />
-        </label>                
+                <label>
+                  <strong>Phone Number:</strong>
+                  <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                  />
+                </label>
               </p>
               <p>
                 <strong>Gmail:</strong> {userData.email}
               </p>
-              <p>
-              <label>
-          Detailed Address:
-          <input
-            type="text"
-            name="detailedAddress"
-            value={formData.detailedAddress}
-            onChange={handleInputChange}
-          />
-        </label>                <input type="text" placeholder="Viva la pizza" />
-              </p>
-              <Map className="h-[20px]" />
+              <div>
+                <label className="flex">
+                  Detailed Address:
+                  <input
+                    type="text"
+                    name="detailedAddress"
+                    value={formData.detailedAddress}
+                    onChange={handleInputChange}
+                  />
+                </label>
+              </div>
+              <div className="h-auto">
+
+              <Map onLocationSelect={handleMapSelection}  />
+              </div>
             </div>
+            <p>-</p>
+
+            <button 
+            disabled={isButtonDisabled}
+          onClick={handleButtonClick}
+          style={{ marginTop: "20px", display: "block" }}>Submit</button>
           </div>
 
-          <div className="time-remaining">
-              <button
-        onClick={handleButtonClick}
-        disabled={isButtonDisabled}
-        className={`submit-button ${isButtonDisabled ? "disabled" : ""}`}
-      >
-        Start Timer
-      </button>
-      {isTimerActive && (
-        <div className="timer">
-          <p>Timer is active! Your order is being processed...</p>
-          {/* Timer logic goes here */}
-        </div>
-      )}
+          {isTimerActive && <div className="time-remaining">
+            <button
+              onClick={handleButtonClick}
+              disabled={isButtonDisabled}
+              className={`submit-button ${isButtonDisabled ? "disabled" : ""}`}
+            >
+              Start Timer
+            </button>
+            {isTimerActive && (
+              <div className="timer">
+                <p>Timer is active! Your order is being processed...</p>
+                {/* Timer logic goes here */}
+              </div>
+            )}
             <h3>Delivery Time Remaining</h3>
 
             <div
@@ -269,7 +313,7 @@ useEffect(() => {
                 {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
               </div>
             </div>
-          </div>
+          </div>}
         </div>
         {showContent && (
           <div>
@@ -341,6 +385,7 @@ useEffect(() => {
                   {labels[hover !== -1 ? hover : value]}
                 </Boxx>
               )}
+              <button>Add Content</button>
             </Boxx>
           </div>
         )}

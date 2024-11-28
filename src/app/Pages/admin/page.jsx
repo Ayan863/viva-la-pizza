@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
 import Dashboard from "../../Components/Dashboard/MainContent";
-import Clients from "../../Components/Tabs/Tab";
+import Clients from "../../Components/Admin-clients/Clients";
 import Orders from "../../Components/Carousel/Carousel";
 import Menus from "../../Components/Admin-menus/Menus";
 import DarkModeSwitch from "../../Components/DarkModeSwitch/DarkModeSwitch";

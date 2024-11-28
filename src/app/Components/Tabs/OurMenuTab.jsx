@@ -12,12 +12,9 @@ import { GrRestaurant } from "react-icons/gr";
 import { GiSaucepan } from "react-icons/gi";
 import { AspectRatio, Card, TabPanel, Typography } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
-// import { getProduct } from "@/app/redux/feature/product/ProductSlice";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
-// import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";//basqa hardasa productslice istifade
 import { getProduct } from "../../redux/feature/product/ProductSlice.js";//basqa hardasa productslice istifade
-// bumu reduxdaki hisseler eslinde js ile olsaydi yaxsi olardi cunki sadeca js emeliyyatlari var ama html de olsaydi onda jsx tamam?
 const OurMenuTab = () => {
   const [index, setIndex] = React.useState(0);
   const colors = ["primary", "danger", "success", "warning"];
@@ -72,13 +69,13 @@ const OurMenuTab = () => {
         ? value.filter((item) => item.type.toLowerCase() == name.toLowerCase())
         : value;
     return (
-      <div className="flex flex-wrap gap-5 items-center justify-around">
+      <div className="flex flex-wrap gap-5 items-center justify-between w-[100%]">
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
-            <div className="card flex w-[47%] h-[100px] items-center justify-between p-2 border-4	rounded-sm	border-s-[#c46d6d]	border-y-transparent border-e-transparent	" key={item.id}>
+            <div className="card flex lg:w-[45%] w-[100%] h-[100px] items-center justify-between p-2 border-4	rounded-sm	border-s-[#c46d6d]	border-y-transparent border-e-transparent	" key={item.id}>
                 <img src={item.image} alt={item.name} className="w-[90px] h-[90px] m-2"/>
                 <div className="title w-[50%]">
-                    <p className="name">{item.name}</p>
+                    <p className="name !!text-[10px]" >{item.name}</p>
                     <span className="ingredients">{item.ingredients !== "-" ? item.ingredients : null}</span>
                 </div>
                 <div className="price">
@@ -105,8 +102,8 @@ const OurMenuTab = () => {
 
   return (
     <Box
-      className="w-[100%]"
-      sx={{
+    className={`w-full m-3 rounded-t-[12px]`}
+    sx={{
         flexGrow: 1,
         m: -3,
         p: 4,
@@ -121,6 +118,7 @@ const OurMenuTab = () => {
         aria-label="Bottom Navigation"
         value={index}
         onChange={(event, value) => setIndex(value)}
+        className="p-1 mx-auto w-[89%] rounded-[16px] shadow-md"
         sx={(theme) => ({
           p: 1,
           borderRadius: 16,
@@ -144,6 +142,8 @@ const OurMenuTab = () => {
           variant="plain"
           size="sm"
           disableUnderline
+          className="flex gap-3 justify-between p-0 rounded-lg"
+
           sx={{ borderRadius: "lg", p: 0 }}
         >
           {/* <Tab
@@ -160,6 +160,9 @@ const OurMenuTab = () => {
             disableIndicator
             orientation="vertical"
             {...(index === 1 && { color: colors[1] })}
+            className={`flex items-center justify-center py-2 w-full transition-all duration-300 font-medium ${
+              index === 1 ? "text-red-500" : "opacity-70"
+            } text-md sm:text-sm lg:text-lg`}
           >
             <ListItemDecorator>
               <FaPizzaSlice />
@@ -170,6 +173,9 @@ const OurMenuTab = () => {
             disableIndicator
             orientation="vertical"
             {...(index === 2 && { color: colors[2] })}
+            className={`flex items-center justify-center py-2 w-full transition-all duration-300 font-medium text-md ${
+              index === 2 ? "text-blue-500" : "opacity-70"
+            } text-md sm:text-sm lg:text-lg`}
           >
             <ListItemDecorator>
               <RiDrinks2Fill />
@@ -180,6 +186,9 @@ const OurMenuTab = () => {
             disableIndicator
             orientation="vertical"
             {...(index === 3 && { color: colors[3] })}
+        className={`flex items-center justify-center py-2 w-full transition-all duration-300 font-medium text-md ${
+          index === 3 ? "text-green-500" : "opacity-70"
+        } text-md sm:text-sm lg:text-lg`}
           >
             <ListItemDecorator>
               <GiSaucepan />
@@ -188,9 +197,9 @@ const OurMenuTab = () => {
           </Tab>
         </TabList>
         {/* <TabPanel value={0}>{getApi("all")}</TabPanel> */}
-        <TabPanel value={0}>{getApi("pizza")}</TabPanel>
-        <TabPanel value={1}>{getApi("drinks")}</TabPanel>
-        <TabPanel value={2}>{getApi("sous")}</TabPanel>
+        <TabPanel value={0} className="mt-4 text-md md:text-sm lg:text-lg">{getApi("pizza")}</TabPanel>
+        <TabPanel value={1} className="mt-4 text-md md:text-sm lg:text-lg">{getApi("drinks")}</TabPanel>
+        <TabPanel value={2} className="mt-4 text-md :text-sm lg:text-lg">{getApi("sous")}</TabPanel>
       </Tabs>
     </Box>
   );

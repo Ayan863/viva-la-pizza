@@ -21,7 +21,7 @@ const TabPanels = () => {
   const colors = ["primary", "danger", "success", "warning"];
   const { value, loading } = useSelector((state) => state.product);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [sortOrder, setSortOrder] = React.useState("asc");
+  const [sortOrder, setSortOrder] = React.useState("default");
   const [sortType, setSortType] = React.useState("name"); // Default olaraq ada görə sıralama
 
   const dispatch = useDispatch();
@@ -50,6 +50,10 @@ const TabPanels = () => {
         const priceA = parseFloat(a.price[0]);
         const priceB = parseFloat(b.price[0]);
         return sortOrder === "asc" ? priceA - priceB : priceB - priceA;
+      }
+      if (sortOrder === "default") {
+        sortedItems.sort((a, b) => a.id - b.id);
+        return sortedItems;
       }
       return 0;
     });
@@ -167,6 +171,7 @@ const TabPanels = () => {
             onChange={(e) => setSortOrder(e.target.value)}
             className="px-4 py-2 border border-gray-300 w-[180px] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
+            <option value="default">Default</option>
             <option value="asc">A-Z / Low to High</option>
             <option value="desc">Z-A / High to Low</option>
           </select>

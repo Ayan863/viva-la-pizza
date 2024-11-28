@@ -12,6 +12,7 @@ import React, { useState } from 'react';
 import './login.css';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState(null);
@@ -35,6 +36,7 @@ const Login = () => {
             actions.resetForm();
   
             router.push(`/`)
+            toast.success(`Welcome to Viva La Pizza, ${JSON.parse(localStorage.getItem("user")).name}`)
           } else {
             setLoginSuccess(false);
           }

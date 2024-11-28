@@ -9,11 +9,10 @@ const initialState = {
     {
         id:2,
         title:"Services",
-        items:["pizza"]
 
     },{
        id:3,
-       title:"Our Blog", 
+       title:"Order history", 
     },{
         id:4,
         title:"About Us"

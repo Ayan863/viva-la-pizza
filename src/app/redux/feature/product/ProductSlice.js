@@ -27,7 +27,20 @@ export const addProduct = createAsyncThunk(
     }
   }
 );
-
+export const editProduct = createAsyncThunk(
+  'products/editProduct',
+  async (updatedProduct, thunkAPI) => {
+    try {
+      const response = await axios.put(
+        `https://66eba35c2b6cf2b89c5b2596.mockapi.io/pizza/${updatedProduct.id}`,
+        updatedProduct
+      );
+      return response.data; // Yenilənmiş məhsulu qaytarır
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data || error.message); // Səhv mesajını qaytarır
+    }
+  }
+);
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id, thunkAPI) => {
@@ -79,6 +92,21 @@ export const productSlice = createSlice({
         .addCase(addProduct.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload || action.error.message;
+        })
+        .addCase(editProduct.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(editProduct.fulfilled, (state, action) => {
+          const index = state.value.findIndex(item => item.id === action.payload.id);
+          if (index !== -1) {
+            state.value[index] = action.payload; // Yenilənmiş məhsulu əvəz edirik
+          }
+          state.loading = false;
+        })
+        .addCase(editProduct.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload || action.error.message;
         });
   },
 });

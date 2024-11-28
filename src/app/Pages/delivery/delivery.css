@@ -1,4 +1,4 @@
-/* Ümumi konteyner */
+@import url('https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Oswald:wght@200..700&display=swap');
 .delivery-container {
     max-width: 600px;
     margin: 50px auto;
@@ -47,3 +47,25 @@
     color: #333;
   }
   
+  .delivery strong {
+    color: red;
+  }
+  
+  .delivery *:not(strong) {
+    color: black;
+    font-family: inherit;
+  }
+  .delivery h2 {
+    font-size: 2rem; /* Başlık boyutu */
+    margin-bottom: 10px;
+  }
+  
+  .delivery h3 {
+    font-size: 1.5rem; /* Alt başlık boyutu */
+    margin-bottom: 8px;
+  }
+  
+  .delivery p {
+    font-size: 1rem; /* Paragraf boyutu */
+    line-height: 1.6;
+  }
