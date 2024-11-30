@@ -57,7 +57,7 @@ const Modals = ({
     }
     return "regular"; // Hata durumunda varsayılan değer
   };
-
+  const [valueSize, setValueSize] = React.useState("")
   const [valueSlice, setValueSlice] = React.useState(getInitialSize); // Başlangıç değeri dinamik
   const getInitialValue = () => {
     try {
@@ -304,7 +304,7 @@ const Modals = ({
             <img
               src={image}
               alt={name}
-              className="max-w-[100%] min-h-[85%] object-fill"
+              className="max-w-[100%] min-h-[85%] object-fill hidden sm:block"
               style={{ clipPath: "inset(0 0 0 45%)" }}
             />
           </div>
@@ -357,14 +357,16 @@ const Modals = ({
               )}
             </div>
             <div className="selection">
-              <div className="select">
+              <div className="select w-[100%]">
                 <p>SELECT SIZE</p>
                 <ToggleButtonGroup
+                  className="flex items-center flex-col md:flex-row"
                   value={value}
                   exclusive
                   onChange={handleSizeChange}
                   sx={{
-                    display: "flex",
+                    // display: "flex",
+                    // flexWrap: "wrap",
                     gap: 1,
                   }}
                 >
@@ -486,6 +488,7 @@ const Modals = ({
                   aria-label="platform"
                   defaultValue="Website"
                   overlay
+                  value={valueSize}
                   name="platform"
                   sx={{
                     flexDirection: "row",

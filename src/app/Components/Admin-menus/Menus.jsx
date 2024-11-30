@@ -54,26 +54,26 @@ const OurMenuTab = () => {
   const reduxProducts = useSelector((state) => state.product.value);
   const [open, setOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState({
-    id: '',
-    name: '',
-    type: '',
-    status: '',
-    price: [0],
-    ingredients: '',
-    image: ''
+    type: "",
+    status: "",
+    price: [],
+    ingredients: "",
+    name: "",
+    image: "",
   });
   const safeValue = Array.isArray(value) ? value : [];
-  const price = selectedItem.price[0] !== undefined ? selectedItem.price[0] : 0;
+  // const price = selectedItem.price[0] !== undefined ? selectedItem.price[0] : 0;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (selectedItem) { // Check if selectedItem exists
-      setSelectedItem((prev) => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+    setSelectedItem((prevItem) => ({
+      ...prevItem,
+      [name]: name === "price" ? value.split(",").map((v) => v.trim()) : value,
+    }));
   };
+  
+  
+  
     const [createModalOpen, setCreateModalOpen] = React.useState(false);
 
   // Funksiyalar
@@ -81,11 +81,39 @@ const OurMenuTab = () => {
   const handleCreateModalOpen = () => setCreateModalOpen(true);
   const handleCreateModalClose = () => setCreateModalOpen(false);
   const handleOpen = (item) => {
-    setSelectedItem(item);
+    setSelectedItem({
+      id: item.id,
+      name: item.name || "",
+      type: item.type || "",
+      status: item.status || "",
+      price: item.price || [],
+      ingredients: item.ingredients || "",
+      image: item.image || "",
+    });
     setOpen(true);
   };
-
-  React.useEffect(() => {
+  const handleEditProduct = (e) => {
+    e.preventDefault();
+    
+    // Inputlardan verilən məlumatları götürürük
+    const updatedProduct = {
+      ...selectedItem,
+    };
+    
+    // Redux əməliyyatını çağırırıq
+    dispatch(editProduct(updatedProduct))
+      .then(() => {
+        // Yeniləmə uğurla başa çatdıqda modalı bağlayırıq
+        setOpen(false);
+        // Məsələn, istifadəçiyə bildiriş göstərə bilərik
+      })
+      .catch((error) => {
+        // Hata baş verərsə, istifadəçiyə bildiriş göstəririk
+        console.error('Redaktə zamanı səhv:', error);
+      });
+    };
+    const handleClose = () => setOpen(false);
+    React.useEffect(() => {
     if (reduxProducts.length === 0) {
       dispatch(getProduct());
     }
@@ -104,7 +132,7 @@ const OurMenuTab = () => {
   const saveToLocalStorage = (key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
   };
-
+  
   // İlk dəfə məhsulları yükləyərkən
   React.useEffect(() => {
     const storedProducts = loadFromLocalStorage("products");
@@ -115,32 +143,7 @@ const OurMenuTab = () => {
       getProduct();
     }
   }, []);
-  const handleEditProduct = (e) => {
-    e.preventDefault();
-    
-    // Inputlardan verilən məlumatları götürürük
-    const updatedProduct = {
-      id: selectedItem.id,  // Redaktə edilən məhsulun ID-sini saxlayırıq
-      name: selectedItem.name,
-      type: selectedItem.type,
-      status: selectedItem.status,
-      price: selectedItem.price,
-      ingredients: selectedItem.ingredients,
-      image: selectedItem.image,
-    };
   
-    // Redux əməliyyatını çağırırıq
-    dispatch(editProduct(updatedProduct))
-      .then(() => {
-        // Yeniləmə uğurla başa çatdıqda modalı bağlayırıq
-        setOpen(false);
-        // Məsələn, istifadəçiyə bildiriş göstərə bilərik
-      })
-      .catch((error) => {
-        // Hata baş verərsə, istifadəçiyə bildiriş göstəririk
-        console.error('Redaktə zamanı səhv:', error);
-      });
-  };
   
   
   
@@ -201,23 +204,7 @@ const OurMenuTab = () => {
   };
 }
   
-  // Modal bağlama funksiyası
-  const handleClose = () => setOpen(false);
 
-  // Form məlumatları üçün dəyişiklik
-  
-
-  //     // LocalStorage-ə əlavə et
-  //     const updatedProducts = [...localProducts, newProduct];
-  //     setLocalProducts(updatedProducts);
-  //     saveToLocalStorage("products", updatedProducts);
-
-  //     // Redux vasitəsilə API-ə göndər
-  //     dispatch(fetchProducts(newProduct));
-
-  //     // Input sahələrini sıfırla
-  //     e.target.reset();
-  //   };
   const getApi = (name) => {
     if (loading) {
       return (
@@ -319,7 +306,6 @@ const OurMenuTab = () => {
     return data ? JSON.parse(data) : [];
   };
 
-  // İlk yükləmə zamanı `localStorage`-u yoxla
   React.useEffect(() => {
     const storedProducts = loadFromLocalStorage("products");
     if (storedProducts.length > 0) {
@@ -329,7 +315,6 @@ const OurMenuTab = () => {
     }
   }, [dispatch]);
 
-  // Redux məhsulları dəyişəndə `localStorage`-u yenilə
   React.useEffect(() => {
     if (reduxProducts.length > 0 && localProducts.length === 0) {
       setLocalProducts(reduxProducts);
@@ -480,7 +465,7 @@ const OurMenuTab = () => {
                             <Input
                               label="price"
                               name="price"
-                              value={selectedItem.price}
+                              value={selectedItem.price.join(", ")}
                               onChange={handleInputChange}
                               fullWidth
                               margin="normal"
@@ -621,7 +606,7 @@ const OurMenuTab = () => {
                   </div>
                   <Button
                     type="submit"
-                    onclick={() => handleCreateModalClose()}
+                    onClick={() => handleCreateModalClose()}
                   >
                     Submit
                   </Button>

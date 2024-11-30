@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../../redux/feature/product/ProductSlice.js";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
-import "./tab.css"
+import "./tab.css";
 const TabPanels = () => {
   const [index, setIndex] = React.useState(0);
   const colors = ["primary", "danger", "success", "warning"];
@@ -141,40 +141,40 @@ const TabPanels = () => {
       }}
       style={{ "--colors-index": colors[index] }}
     >
-      <div className="flex w-[80%]">
-        <p className="menu-services flex w-full">Menu Services</p>
-        <div className="flex flex-col justify-end items-end mb-4 space-x-4 w-[100%] gap-2">
+      <div className="flex flex-col w-[80%] sm:flex-row ">
+        <p className="menu-services flex w-full pt-2">Menu Services</p>
+        <div className="flex flex-col justify-end items-end mb-4 pt-2 space-x-4 w-[100%] gap-2">
           {/* Axtarış */}
           <input
             placeholder="Search by name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-[371px]"
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-[371px] w-[184px]"
           />
 
           {/* Sıralama */}
-          <div className="flex gap-2">
-          <select
-            placeholder="Sort by"
-            value={sortType}
-            onChange={(e) => setSortType(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-[184px] "
-          >
-            <option value="name">Name</option>
-            <option value="price">Price</option>
-          </select>
+          <div className="flex sm:flex-row gap-2 flex-col">
+            <select
+              placeholder="Sort by"
+              value={sortType}
+              onChange={(e) => setSortType(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-[184px] "
+            >
+              <option value="name">Name</option>
+              <option value="price">Price</option>
+            </select>
 
-          {/* Order */}
-          <select
-            placeholder="Order"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="px-4 py-2 border border-gray-300 w-[180px] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="default">Default</option>
-            <option value="asc">A-Z / Low to High</option>
-            <option value="desc">Z-A / High to Low</option>
-          </select>
+            {/* Order */}
+            <select
+              placeholder="Order"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-4 py-2 border border-gray-300 w-[180px] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="default">Default</option>
+              <option value="asc">A-Z / Low to High</option>
+              <option value="desc">Z-A / High to Low</option>
+            </select>
           </div>
         </div>
       </div>

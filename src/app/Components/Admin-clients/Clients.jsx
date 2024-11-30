@@ -78,6 +78,7 @@ const Clients = () => {
         size="lg"
         aria-label="Bottom Navigation"
         value={index}
+        className="sm:w-[100%]"
         onChange={(event, value) => setIndex(value)}
         sx={(theme) => ({
           p: 1,
@@ -96,6 +97,9 @@ const Clients = () => {
               opacity: 0.7,
             },
           },
+          "@media (max-width: 768px)": {
+            width: "auto", // Width will be auto on phone screens
+          },
         })}
       >
         <TabPanel>
@@ -105,11 +109,11 @@ const Clients = () => {
           >
             Add
           </button>
-          <div className="flex flex-wrap gap-5 items-center justify-around">
+          <div className="flex flex-wrap sm:gap-5 items-center justify-around sm:w-[100%]">
             {data.map((item) => (
               <div
                 key={item.id}
-                className="card relative flex w-[47%] h-[100px] items-center justify-between p-2 border-4 rounded-sm border-s-[#c46d6d] border-y-transparent border-e-transparent"
+                className="card relative flex sm:w-[47%] w-auto sm:h-[100px] items-center justify-between p-2 border-4 rounded-sm border-s-[#c46d6d] border-y-transparent border-e-transparent md:flex-row flex-col"
               >
                 <img
                   src={
@@ -122,10 +126,10 @@ const Clients = () => {
                 />
                 <div className="title w-[50%]">
                   <p className="name font-sans">{item.name}</p>
-                  <p className="password font-mono">{item.password}</p>
-                  <p className="email font-mono">{item.email}</p>
+                  <p className="password font-mono w-auto">{item.password}</p>
+                  <p className="email font-mono w-auto">{item.email}</p>
                 </div>
-                <p className="money font-sans">{item.money}₼</p>
+                <p className="money font-sans w-auto">{item.money}₼</p>
           
               </div>
             ))}

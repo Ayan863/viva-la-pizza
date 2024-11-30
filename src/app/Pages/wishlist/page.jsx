@@ -5,13 +5,14 @@ import "./wishlist.css";
 import toast from "react-hot-toast";
 import CardComp from "@/app/Components/Card/Card";
 import Link from "next/link";
-
+import Header from "../../Components/Header/Header";
+import Footer from "../../Components/Footer/Footer";
 const Page = () => {
   const [wishlistData, setWishlistData] = useState([]);
 
   useEffect(() => {
     const updateWishlist = () => {
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && localStorage) {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
           try {
@@ -36,6 +37,8 @@ const Page = () => {
 
   console.log("hello", wishlistData);
   return (
+    <>
+    <Header/>
     <section className="wishlist">
       <h4 className={wishlistData.length > 0 ? "text-center" : null}>
         <div className="px-3">Wishlist Page</div>
@@ -68,6 +71,8 @@ const Page = () => {
         </div>
       )}
     </section>
+    <Footer/>
+    </>
   );
 };
 

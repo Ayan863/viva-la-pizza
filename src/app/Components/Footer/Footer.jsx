@@ -6,7 +6,8 @@ import { IoCall } from "react-icons/io5";
 import "./footer.css";
 const Footer = () => {
   return (
-    <footer className="p-4">
+    <footer className="flex justify-center w-[100%] items-center">
+  <div>
   <div className="nav text-white flex flex-wrap gap-2 justify-center p-3">
     <a href="#">About us</a>
     {">"}
@@ -16,14 +17,14 @@ const Footer = () => {
     {">"}
     <a href="#">Gift Certificates</a>
   </div>
-  <div className="flex justify-center w-full p-3 items-center">
-    <div className="flex flex-wrap gap-5 justify-between w-[50%]">
-      <div className="images flex flex-col gap-2 ">
+  <div className="flex justify-center w-[100%] items-center">
+    <div className="flex flex-wrap gap-5 justify-center w-[100%] items-center">
+      <div className="images flex flex-col ">
         <div className="firstL flex gap-2">
           <img
             src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/5-home-default-870x564.jpg"
             alt=""
-            className="w-[75px] h-[75px]" // Resim boyutları küçültüldü
+            className="w-[75px] h-[75px]" 
           />
           <img
             src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/4-home-default-870x564.jpg"
@@ -78,6 +79,7 @@ const Footer = () => {
   </div>
   <div className="copyR p-5 flex items-center justify-center text-white">
     Powered By <a href="https://www.opencart.com/">OpenCart</a> Your Store © 2024
+  </div>
   </div>
 </footer>
 

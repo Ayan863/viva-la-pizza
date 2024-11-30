@@ -38,19 +38,30 @@
 
 .cart-container {
     display: flex;
+    flex-wrap: wrap;
+    width: 100%;
     justify-content: space-between;
     align-items: start;
 }
 
 .cart-items {
-    width: 65%;
-    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    width: 60%;
     border-radius: 10px;
     padding: 20px;
     background-color: white;
-    display: grid;
-    grid-template-columns: 1fr;
     gap: 20px;
+}
+.delete-btn{
+    position: absolute;
+    top: -15px;
+    right: -15px;
+}
+@media (max-width: 768px) { /* Telefon ölçüləri üçün */
+    .cart-items {
+        width: auto; /* Genişlik avtomatik olur */
+    }
 }
 
 .cart-item {
@@ -59,7 +70,8 @@
     padding: 10px;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
-    background-color: #f9f9f9;
+    background-color: white;
+    position: relative;
 }
 .sc-gsTCUz{
     width: 250px !important;
@@ -71,27 +83,33 @@
     object-fit: contain;
 }
 
-.cart-item-info {
+.cart-item-infos {
     flex: 1;
     margin-left: 15px;
+    
 }
 
-.cart-item-info h4 {
+.cart-item-infos h4 {
     font-size: 16px;
     color: #232d40;
     margin-bottom: 5px;
+    font-family: 'Beyond The Mountains', sans-serif !important;
+    font-size: 24px;
+    color: rgb(86, 2, 2);
 }
 
-.cart-item-info p {
+.cart-item-infos p {
     font-size: 16px;
     font-weight: bold;
-    color: #232d40;
+    color: rgb(86, 2, 2);
+
 }
 
 .cart-item-controls {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
 }
 
 .quantity-controls {
@@ -100,8 +118,8 @@
     gap: 5px;
 }
 
-.quantity-controls button {
-    padding: 5px 10px;
+.quantity-control button {
+    padding: 1px 5px;
     background-color: #f3f4f6;
     border: 1px solid #e5e7eb;
     border-radius: 5px;
@@ -117,7 +135,7 @@
 
 .cart-summary {
     border: 1px solid red;
-    /* box-shadow: -4px -3px 15px 21px #a81616; */
+    box-shadow: -4px -3px 15px 21px #a81616;
     box-shadow:  red 0px 8px 10px;
     border-radius: 10px;
     padding: 20px;

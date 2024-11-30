@@ -6,7 +6,7 @@ const CarouselMini = ({images,sum}) => {
   return (
     <>
       <Swiper
-      className="mySwipers"
+      className="mySwipers w-[100%]"
         slidesPerView={sum ? sum : 3}
         spaceBetween={30}
         pagination={{
@@ -19,8 +19,7 @@ const CarouselMini = ({images,sum}) => {
         
       >
         {images.map((item,index)=>(
-
-        <SwiperSlide key={index}><img src={item} alt="pizza" /></SwiperSlide>
+          <SwiperSlide key={index}><img src={item} alt="pizza" /></SwiperSlide>
         ))}
 
       </Swiper>

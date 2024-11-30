@@ -42,13 +42,6 @@ const Carousel = () => {
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <img
-            src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/cache/catalog/demo/banners/slider-02-1903x900.jpg"
-            alt="pizza"
-            className="h-[650px] w-[100%]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
         <div className="all bg-[url('https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/catalog/demo/banners/parallax-bg.jpg')] h-[650px] bg-cover bg-center">
   <div className="flex justify-end w-[85%] items-center h-full px-8 text-right">
     <div className="max-w-lg text-white p-8 backdrop-blur-lg bg-black/50 rounded-3xl shadow-lg w-[400px]">
@@ -56,14 +49,14 @@ const Carousel = () => {
         REWARDS
       </h4>
       <h2 className="text-4xl font-bold mb-6 leading-tight text-start">
-        Every Points Every Time You Order Online
+        Order Online
       </h2>
       <p className="mb-8 text-lg font-light text-start ">
         Great offer for pizza lovers. Earn Viva La Pizza's Pizza 'Reward points' and turn them into amazing deals and discounts. Hurry up, and grab your 'reward points' now.
       </p>
-      <button className="px-8 py-4 bg-red-600 text-white font-medium rounded-full hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg">
-        <FaShoppingCart /> ORDER NOW
-      </button>
+      {/* <button className="px-8 py-4 bg-red-600 text-white font-medium rounded-full hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg">
+        {/* <FaShoppingCart /> ORDER NOW 
+      </button> */}
     </div>
   </div>
 </div>

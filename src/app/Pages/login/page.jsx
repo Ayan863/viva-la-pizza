@@ -13,6 +13,8 @@ import './login.css';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Header from "../../Components/Header/Header";
+import Footer from "../../Components/Footer/Footer";
 
 const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState(null);
@@ -63,6 +65,7 @@ const Login = () => {
   };
 
   return (
+    <><Header/>
     <section className="card-Section">
       <video
         className="video w-full h-full object-cover"
@@ -198,6 +201,8 @@ const Login = () => {
         </div>
       </div>
     </section>
+    <Footer/>
+    </>
   );
 };
 

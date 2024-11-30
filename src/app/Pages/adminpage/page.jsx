@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import './login.css';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import AdminLayout from "@/layouts/AdminLayout"; // Admin Layout'u import et
+// import AdminLayout from "./layouts/AdminLayout"; // Admin Layout'u import et
 
 const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState(null);
@@ -28,14 +28,14 @@ const Login = () => {
             (item) => item.name === values.name && item.password === values.password
           );
           localStorage.clear();
-          localStorage.setItem(`user`,JSON.stringify(matchedUser));
+          localStorage.setItem(`admin`,JSON.stringify(matchedUser));
           console.log("item=",matchedUser);
   
           if (matchedUser) {
             setLoginSuccess(true);
             actions.resetForm();
   
-            router.push(`/`)
+            router.push(`/Pages/admin/user`)
           } else {
             setLoginSuccess(false);
           }

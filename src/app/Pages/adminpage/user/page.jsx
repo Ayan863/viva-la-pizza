@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Navbar from "../../Components/Navbar/Navbar";
-import Dashboard from "../../Components/Dashboard/MainContent";
-import Clients from "../../Components/Admin-clients/Clients";
-import Orders from "../../Components/Carousel/Carousel";
-import Menus from "../../Components/Admin-menus/Menus";
-import DarkModeSwitch from "../../Components/DarkModeSwitch/DarkModeSwitch";
+import Navbar from "../../../Components/Navbar/Navbar";
+import Dashboard from "../../../Components/Admin-dashboard/MainContent";
+import Clients from "../../../Components/Admin-clients/Clients";
+import Orders from "../../../Components/Admin-orders/Orders";
+import Menus from "../../../Components/Admin-menus/Menus";
+import DarkModeSwitch from "../../../Components/DarkModeSwitch/DarkModeSwitch";
 import "./admin.css";
 
 const Admin = () => {
@@ -45,7 +45,6 @@ const Admin = () => {
 
   return (
     <>
-      {/* Sidebar */}
       <section id="sidebar" className={isSidebarHidden ? "hide" : ""}>
         <a href="#" className="brand">
           <span className="text p-3">Viva La Pizza</span>

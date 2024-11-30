@@ -4,11 +4,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { GoDotFill } from "react-icons/go";
 import "./basket.css";
+import { TiDelete } from "react-icons/ti";
 import toast from "react-hot-toast";
 import { Wheel } from "react-custom-roulette";
 import axios from "axios";
 import Link from "next/link";
-
+import Header from "../../Components/Header/Header";
+import Footer from "../../Components/Footer/Footer";
 const Basket = () => {
   const data = [
     { option: "10%" },
@@ -214,9 +216,10 @@ const Basket = () => {
   }, []);
 
   return (
-    <div>
-      <section className="basket-section">
-        <div className="cart-container">
+    <>
+    <Header/>
+      <section className="basket-section flex justify-center items-center w-[100%]">
+        <div className="cart-container ">
           <div className="cart-items">
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
@@ -226,11 +229,11 @@ const Basket = () => {
                     alt={item.name}
                     className="cart-item-image"
                   />
-                  <div className="cart-item-info">
+                  <div className="cart-item-infos">
                     <h4>{item.name}</h4>
                     <p>{item.total}₼</p>
                     <div className="cart-item-controls">
-                      <div className="quantity-controls">
+                      <div className="quantity-control">
                         <button onClick={() => updateQuantity(item.id, -1)}>
                           -
                         </button>
@@ -243,7 +246,7 @@ const Basket = () => {
                         onClick={() => removeItem(item.id)}
                         className="delete-btn"
                       >
-                        <RiDeleteBin6Line />
+                        <TiDelete className="w-[40px] h-[40px] text-red-900" />
                       </button>
                     </div>
                   </div>
@@ -350,7 +353,8 @@ const Basket = () => {
           </div>
         </div>
       </section>
-    </div>
+      <Footer/>
+    </>
   );
 };
 

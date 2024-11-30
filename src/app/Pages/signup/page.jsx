@@ -12,7 +12,8 @@ import React, { useState } from 'react';
 import './signup.css';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-
+import Header from "../../Components/Header/Header";
+import Footer from "../../Components/Footer/Footer";
 const Signup = () => {
   const [showError, setShowError] = useState({ name: true, password: true, email: true });
   const [apiError, setApiError] = useState("");
@@ -52,6 +53,8 @@ const Signup = () => {
   });
 
   return (
+    <>
+    <Header/>
     <section className="card-Section">
       <video className="video w-full h-full object-cover" autoPlay loop muted suppressHydrationWarning>
         <source src="/pizza-video.mp4" type="video/mp4" />
@@ -215,6 +218,8 @@ const Signup = () => {
         </div>
       </div>
     </section>
+    <Footer/>
+    </>
   );
 };
 

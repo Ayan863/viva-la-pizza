@@ -344,13 +344,13 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
       const itemIndex = parsedUser.basket.findIndex((item) => item.id === id);
 
       if (itemIndex !== -1) {
-        setValue(itemIndex.size); // Boyutu ayarla
+        setValue(itemIndex.size); 
 
         parsedUser.basket[itemIndex].quantity = quantity;
         parsedUser.basket[itemIndex].total = (quantity * dynamicPrice).toFixed(
           2
         );
-        setValueSlice(parsedUser.basket[itemIndex].size); // Boyutu güncelle
+        setValueSlice(parsedUser.basket[itemIndex].size);
 
         localStorage.setItem("user", JSON.stringify(parsedUser));
         setQuantity(parsedUser.basket[itemIndex].quantity);
@@ -366,10 +366,11 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
     <>
       <Card
         variant="outlined"
-        sx={{ width: 300, backgroundColor: "white" }}
+        sx={{backgroundColor: "white" }}
+        className="w-[200px] sm:w-[300px]"
         onClick={handleOpenModal}
       >
-        <CardOverflow>
+        <CardOverflow className="w-[200px] sm:w-[300px]">
           <img
             src={image}
             loading="lazy"
@@ -413,6 +414,7 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
             {name}
           </Typography>
           <Typography
+          className="w-[100%]"
             level="body-sm"
             sx={{
               whiteSpace: "nowrap",

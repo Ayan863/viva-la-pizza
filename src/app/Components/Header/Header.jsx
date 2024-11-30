@@ -1,42 +1,37 @@
+"use client";
 import { setActiveItem } from "@/app/redux/feature/menu/MenuSlice";
-import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 
 import Link from "next/link";
 import "./header.css";
 import axios from "axios";
-import Badge from '@mui/joy/Badge';
-
+import Badge from "@mui/joy/Badge";
+import React from "react";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const [basketItems, setBasketItems] = useState([]); // Basket item-lar
-  const [isBasketMenuOpen, setIsBasketMenuOpen] = useState(false);
+  const [basketItems, setBasketItems] = React.useState([]);
+  const [isBasketMenuOpen, setIsBasketMenuOpen] = React.useState(false);
   const activeItem = useSelector((state) => state.menu.activeItem);
   const menuItems = useSelector((state) => state.menu.value);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Menü durumu
-  const [basketCount, setBasketCount] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [basketCount, setBasketCount] = React.useState(0);
   const getBasketCount = () => {
-    // `localStorage`'dan kullanıcı bilgilerini al
     const user = JSON.parse(localStorage.getItem("user")) || {};
     const basket = user.basket || [];
-    return basket.length; // Farklı ürünlerin sayısını döndür
+    return basket.length;
   };
 
   React.useEffect(() => {
-    // `localStorage`'dan kullanıcı bilgilerini çek
     setBasketCount(getBasketCount());
 
-    // Sepet sayısını belirli aralıklarla güncellemek için `setInterval`
     const interval = setInterval(() => {
       setBasketCount(getBasketCount());
-    }, 1000); // Her 1 saniyede bir güncelleme
-
-    // Cleanup: Interval'i temizle
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   let hoverTimeout;
 
   const handleMouseEnter = () => {
@@ -52,7 +47,7 @@ const Header = () => {
   const handleBasketMouseLeave = () => {
     hoverTimeout = setTimeout(() => {
       setIsBasketMenuOpen(false);
-    }, 100); // 500ms gecikmə əlavə edir
+    }, 100);
   };
 
   const handleBasketMouseEnter = () => {
@@ -65,7 +60,7 @@ const Header = () => {
       try {
         const parsedData = JSON.parse(userData);
         if (parsedData.basket) {
-          setBasketItems(parsedData.basket); // Basket məlumatlarını state-ə yaz
+          setBasketItems(parsedData.basket);
         }
       } catch (e) {
         console.error("Error parsing user data:", e);
@@ -74,30 +69,25 @@ const Header = () => {
   }, [userData]);
 
   let data = {};
-
-  // localStorage verisini parse etmeden önce kontrol et
   if (userData && userData !== "undefined") {
     try {
-      data = JSON.parse(userData); // Eğer geçerli bir veri varsa, parse et
+      data = JSON.parse(userData);
     } catch (e) {
-      console.error("Error parsing user data:", e); // Hata olursa logla
+      console.error("Error parsing user data:", e);
     }
   }
   const incrementQuantity = async (index) => {
     try {
-      // Basketdəki məlumatları yenilə
       const updatedItems = [...basketItems];
       updatedItems[index].quantity += 1;
       setBasketItems(updatedItems);
 
-      // localStorage-də istifadəçini yenilə
       const user = JSON.parse(localStorage.getItem("user"));
       if (user && user.basket) {
         user.basket = updatedItems;
         localStorage.setItem("user", JSON.stringify(user));
       }
 
-      // Axios ilə API-ə göndər
       const apiUrl = `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${user.id}`;
       await axios.put(apiUrl, {
         basket: updatedItems,
@@ -111,20 +101,17 @@ const Header = () => {
 
   const decrementQuantity = async (index) => {
     try {
-      // Əgər quantity > 1, azalt
       const updatedItems = [...basketItems];
       if (updatedItems[index].quantity > 1) {
         updatedItems[index].quantity -= 1;
         setBasketItems(updatedItems);
 
-        // localStorage-də istifadəçini yenilə
         const user = JSON.parse(localStorage.getItem("user"));
         if (user && user.basket) {
           user.basket = updatedItems;
           localStorage.setItem("user", JSON.stringify(user));
         }
 
-        // Axios ilə API-ə göndər
         const apiUrl = `https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${user.id}`;
         await axios.put(apiUrl, {
           basket: updatedItems,
@@ -169,7 +156,13 @@ const Header = () => {
                   <Link href="/">{item.title}</Link>
                 ) : item.title === "Services" ? (
                   <Link href="../../Pages/menu">{item.title}</Link>
-                ) : (
+                ) : item.title === "About Us" ? (
+                  <Link href="../../Pages/aboutUs">{item.title}</Link>
+                ): item.title === "Order history" ? (
+                  <Link href="../../Pages/orderHistory">{item.title}</Link>
+                )
+                
+                : (
                   <a href="#">{item.title}</a>
                 )}
 
@@ -194,22 +187,22 @@ const Header = () => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            
-              <div>
-                {data.img ?
+            <div>
+              {data.img ? (
                 <img
                   src={data.img}
                   alt="profile"
                   className="w-[25px] rounded-full"
-                /> : <FaUser className="cursor-pointer" />}
-              </div>
-             
-            
+                />
+              ) : (
+                <FaUser className="cursor-pointer" />
+              )}
+            </div>
 
             {isUserMenuOpen && (
               <div className="userMenu absolute top-full mt-2 z-10 bg-white text-black rounded shadow-lg p-2">
                 <ul>
-                <li className="px-4 py-2 hover:bg-gray-200 text-[15px] rounded">
+                  <li className="px-4 py-2 hover:bg-gray-200 text-[15px] rounded">
                     <Link href="./">Profile</Link>
                   </li>
                   <li className="px-4 py-2 hover:bg-gray-200 text-[15px] rounded">
@@ -258,7 +251,12 @@ const Header = () => {
               onMouseLeave={handleBasketMouseLeave}
             >
               <Link href="./../../Pages/basket">
-                <Badge badgeContent={basketCount} variant="solid" color="danger" size="sm">
+                <Badge
+                  badgeContent={basketCount}
+                  variant="solid"
+                  color="danger"
+                  size="sm"
+                >
                   <FaShoppingCart className="cursor-pointer" />
                 </Badge>
               </Link>
@@ -315,11 +313,10 @@ const Header = () => {
               )}
             </div>
           </div>
-          <div>
-            
-          </div>
+          <div></div>
 
-          <div>{userData ? <>{data.money}₼</> : null}</div>
+          <div className="hidden sm:block">
+{userData ? <>{data.money}₼</> : null}</div>
         </div>
       </div>
     </header>

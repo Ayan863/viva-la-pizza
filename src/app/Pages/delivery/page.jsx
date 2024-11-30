@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 const Map = dynamic(() => import("../../Components/Map/Map"));
 import * as React from "react";
@@ -14,6 +15,9 @@ import Rating from "@mui/material/Rating";
 import Boxx from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
 import "./delivery.css";
+import axios from "axios";
+import Header from "../../Components/Header/Header";
+import Footer from "../../Components/Footer/Footer";
 const labels = {
   0.5: "Useless",
   1: "Useless+",
@@ -32,6 +36,7 @@ function getLabelText(value) {
 }
 
 export default function Delivery() {
+  const router = useRouter();
   const [timeLeft, setTimeLeft] = useState(10);
   const [randomTime, setRandomTime] = useState(0);
   const [showContent, setShowContent] = useState(false);
@@ -47,9 +52,17 @@ export default function Delivery() {
     phoneNumber: "",
     location: null,
   });
+  const [textContent, setTextContent] = useState("");
+  const [valueContent, setValueContent] = useState(null);
+  const [hoverContent, setHoverContent] = useState(-1);
+
+  const addEmojiContent = (emoji) => () => {
+    setText((prev) => prev + emoji);
+  };
+ 
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => {
@@ -74,11 +87,54 @@ export default function Delivery() {
       return updatedData;
     });
   };
+  const handleAddContent = () => {
+    const userData = localStorage.getItem("user");
+    const updatedData = JSON.parse(userData) || {};
+    const ordersData = updatedData.orders || [];
+  
+    console.log("updatedData", updatedData);
+    console.log("ordersData", ordersData);
+  
+    // Add `name` and `phoneNumber` from `formData` to the delivery object
+    updatedData.delivery = {
+      content: text,
+      rating: value,
+      location: formData.detailedAddress,
+      phoneNumber: formData.phoneNumber, // Add phone number
+      name: updatedData.name || "Default Name", // Add name (or fallback to a default value if missing)
+      totalDuration: randomTime,
+      ordersData,
+    };
+    updatedData.orders = [];
+  
+    localStorage.setItem("user", JSON.stringify(updatedData));
+  
+    axios
+      .put(`https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${updatedData.id}`, updatedData)
+      .then((response) => {
+        console.log("First API Response:", response.data);
+        toast.success("Data successfully updated");
+  
+        // Second API POST request to include name and phone number
+        return axios.post("https://66eba56d2b6cf2b89c5b2e2d.mockapi.io/Delivery", updatedData.delivery);
+      })
+      .then((deliveryResponse) => {
+        console.log("Second API Response:", deliveryResponse.data);
+        toast.success("Delivery data successfully added!");
+        router.push('/'); // Navigate to the home page
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error);
+      });
+  };
+  
+
   useEffect(() => {
     const allFieldsFilled =
       formData.detailedAddress.trim() && formData.phoneNumber.trim();
     setIsButtonDisabled(!allFieldsFilled);
   }, [formData]);
+
   useEffect(() => {
     if (!randomSelected) {
       const randomValue = Math.floor(Math.random() * (10 * 60));
@@ -95,10 +151,9 @@ export default function Delivery() {
     } else {
       setIsTimerActive(true);
       toast.success("Order processing started!");
-
-      
     }
   };
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -110,6 +165,7 @@ export default function Delivery() {
       setTotalAmount(total.toFixed(2));
     }
   }, []);
+
   useEffect(() => {
     if (!randomSelected) {
       const randomValue = Math.floor(Math.random() * (10 * 60));
@@ -118,6 +174,7 @@ export default function Delivery() {
       console.log("Random value selected: ", randomValue);
     }
   }, [randomSelected]);
+
   useEffect(() => {
     let interval;
 
@@ -132,13 +189,10 @@ export default function Delivery() {
         });
       }, 1000);
     }
-
     return () => clearInterval(interval);
-  }, [isTimerActive, timeLeft])
+  }, [isTimerActive, timeLeft]);
 
   const handleTimeEnd = () => {
-    console.log("Handle Time End: ", randomTime);
-
     setTimeout(() => {
       if (randomTime > 30 * 60) {
         toast.error("Sorry, delivery is delayed.");
@@ -146,21 +200,23 @@ export default function Delivery() {
         setTimeLeft(randomTime - 150);
       } else {
         toast.success("Your delivery is on time! Enjoy your meal.");
-        setIsTimerActive(false)
+        setIsTimerActive(false);
         setShowContent(true);
       }
     }, 2000);
   };
+
   if (!userData) {
     return <p>Loading...</p>;
   }
   const groupedItems = userData.orders
-  .flatMap((order) => order.items)
-  .reduce((acc, item) => {
-    acc[item.type] = acc[item.type] || [];
-    acc[item.type].push(item.name);
-    return acc;
-  }, {});
+    .flatMap((orders) => orders.items)
+    .reduce((acc, item) => {
+      acc[item.type] = acc[item.type] || [];
+      acc[item.type].push(item.name);
+      return acc;
+    }, {});
+
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
   const radius = 50;
@@ -168,9 +224,10 @@ export default function Delivery() {
   const offset = circumference - (timeLeft / (30 * 60)) * circumference;
 
   return (
+    <>
+    <Header/>
     <section className="delivery">
       <Toaster />
-
       <div
         style={{
           maxWidth: "600px",
@@ -182,28 +239,26 @@ export default function Delivery() {
         }}
       >
         <h2>Pizza Delivery</h2>
-
         <div className="flex">
           <div className="personal info">
             <div>
-              
               <div>
                 <div>
-                {groupedItems.pizza && (
-  <p>
-    <strong>Pizza:</strong> {groupedItems.pizza.join(" ")}
-  </p>
-)}
-{groupedItems.drinks && (
-  <p>
-    <strong>Drinks:</strong> {groupedItems.drinks.join(" ")}
-  </p>
-)}
-{groupedItems.sous && (
-  <p>
-    <strong>Sous:</strong> {groupedItems.sous.join(" ")}
-  </p>
-)}
+                  {groupedItems.pizza && (
+                    <p>
+                      <strong>Pizza:</strong> {groupedItems.pizza.join(" ")}
+                    </p>
+                  )}
+                  {groupedItems.drinks && (
+                    <p>
+                      <strong>Drinks:</strong> {groupedItems.drinks.join(" ")}
+                    </p>
+                  )}
+                  {groupedItems.sous && (
+                    <p>
+                      <strong>Sous:</strong> {groupedItems.sous.join(" ")}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -237,83 +292,89 @@ export default function Delivery() {
                 </label>
               </div>
               <div className="h-auto">
-
-              <Map onLocationSelect={handleMapSelection}  />
+                <Map onLocationSelect={handleMapSelection} />
               </div>
             </div>
             <p>-</p>
 
-            <button 
-            disabled={isButtonDisabled}
-          onClick={handleButtonClick}
-          style={{ marginTop: "20px", display: "block" }}>Submit</button>
+            <button
+              disabled={isButtonDisabled}
+              onClick={handleButtonClick}
+              style={{ marginTop: "20px", display: "block" }}
+            >
+              Submit
+            </button>
           </div>
 
-          {isTimerActive && <div className="time-remaining">
-            <button
-              onClick={handleButtonClick}
-              disabled={isButtonDisabled}
-              className={`submit-button ${isButtonDisabled ? "disabled" : ""}`}
-            >
-              Start Timer
-            </button>
-            {isTimerActive && (
-              <div className="timer">
-                <p>Timer is active! Your order is being processed...</p>
-                {/* Timer logic goes here */}
-              </div>
-            )}
-            <h3>Delivery Time Remaining</h3>
-
-            <div
-              style={{
-                position: "relative",
-                width: "200px",
-                height: "200px",
-                margin: "0 auto",
-              }}
-            >
-              <svg
-                width="200"
-                height="200"
-                style={{ transform: "rotate(-90deg)" }}
+          {isTimerActive && (
+            <div className="time-remaining">
+              <button
+                onClick={handleButtonClick}
+                disabled={isButtonDisabled}
+                className={`submit-button ${
+                  isButtonDisabled ? "disabled" : ""
+                }`}
               >
-                <circle
-                  cx="100"
-                  cy="100"
-                  r="50"
-                  stroke="#e6e6e6"
-                  strokeWidth="10"
-                  fill="none"
-                />
-                <circle
-                  cx="100"
-                  cy="100"
-                  r="50"
-                  stroke="#4caf50"
-                  strokeWidth="10"
-                  fill="none"
-                  strokeDasharray={2 * Math.PI * 50}
-                  strokeDashoffset={
-                    2 * Math.PI * 50 -
-                    (timeLeft / (30 * 60)) * (2 * Math.PI * 50)
-                  }
-                  style={{ transition: "stroke-dashoffset 1s linear" }}
-                />
-              </svg>
+                Start Timer
+              </button>
+              {isTimerActive && (
+                <div className="timer">
+                  <p>Timer is active! Your order is being processed...</p>
+                  {/* Timer logic goes here */}
+                </div>
+              )}
+              <h3>Delivery Time Remaining</h3>
+
               <div
                 style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  fontSize: "20px",
+                  position: "relative",
+                  width: "200px",
+                  height: "200px",
+                  margin: "0 auto",
                 }}
               >
-                {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+                <svg
+                  width="200"
+                  height="200"
+                  style={{ transform: "rotate(-90deg)" }}
+                >
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="50"
+                    stroke="#e6e6e6"
+                    strokeWidth="10"
+                    fill="none"
+                  />
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="50"
+                    stroke="#4caf50"
+                    strokeWidth="10"
+                    fill="none"
+                    strokeDasharray={2 * Math.PI * 50}
+                    strokeDashoffset={
+                      2 * Math.PI * 50 -
+                      (timeLeft / (30 * 60)) * (2 * Math.PI * 50)
+                    }
+                    style={{ transition: "stroke-dashoffset 1s linear" }}
+                  />
+                </svg>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "20px",
+                  }}
+                >
+                  {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+                </div>
               </div>
             </div>
-          </div>}
+          )}
         </div>
         {showContent && (
           <div>
@@ -385,11 +446,14 @@ export default function Delivery() {
                   {labels[hover !== -1 ? hover : value]}
                 </Boxx>
               )}
-              <button>Add Content</button>
+              <button onClick={handleAddContent}>Add Content</button>
             </Boxx>
           </div>
         )}
       </div>
     </section>
+    <Footer/>
+    
+    </>
   );
 }

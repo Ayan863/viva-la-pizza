@@ -41,10 +41,10 @@ body.dark {
 	--dark: #FBFBFB;
 }
 
-body {
+/* body {
 	background: var(--grey);
 	overflow-x: hidden;
-}
+} */
 
 
 
