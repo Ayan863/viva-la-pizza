@@ -35,12 +35,12 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         const item = parsedUser.basket.find((item) => item.id === id);
-        return item ? item.quantity : 1; // Sepette varsa miktarını al, yoksa 1
+        return item ? item.quantity : 1; 
       }
     } catch (error) {
       console.error("Error reading from localStorage:", error);
     }
-    return 1; // Hata durumunda varsayılan 1
+    return 1; 
   };
   const getInitialSize = () => {
     try {
@@ -48,33 +48,33 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         const item = parsedUser.basket.find((item) => item.id === id);
-        return item ? item.size : "regular"; // Sepette varsa boyutunu al, yoksa "regular"
+        return item ? item.size : "regular"; 
       }
     } catch (error) {
       console.error("Error reading from localStorage:", error);
     }
-    return "regular"; // Hata durumunda varsayılan değer
+    return "regular"; 
   };
 
-  const [valueSlice, setValueSlice] = React.useState(getInitialSize); // Başlangıç değeri dinamik
+  const [valueSlice, setValueSlice] = React.useState(getInitialSize); 
   const getInitialValue = () => {
     try {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         const item = parsedUser.basket.find((item) => item.id === id);
-        return item ? item.size : "small"; // Sepette varsa boyutunu al, yoksa "small"
+        return item ? item.size : "small"; 
       }
     } catch (error) {
       console.error("Error reading from localStorage:", error);
     }
-    return "small"; // Hata durumunda varsayılan değer
+    return "small"; 
   };
 
   const [value, setValue] = useState(getInitialValue);
 
   const [quantity, setQuantity] = useState(getInitialQuantity);
-  const dynamicPrice = price[0]; // price dizisinden alınıyorsa, price[0] sayısı geçerli mi?
+  const dynamicPrice = price[0]; 
   // if (isNaN(dynamicPrice)) {
   //   console.error("Invalid price:", dynamicPrice);
   // }
@@ -247,7 +247,7 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
     let parsedUser = storedUser ? JSON.parse(storedUser) : { basket: [] };
   
     const itemIndex = parsedUser.basket.findIndex((item) => item.id === id);
-    const totalPrice = (quantity * dynamicPrice).toFixed(2); // Calculate the total price
+    const totalPrice = (quantity * dynamicPrice).toFixed(2);
   
     if (itemIndex === -1) {
       parsedUser.basket.push({
@@ -259,13 +259,13 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
         image,
         size: value,
         quantity,
-        total: totalPrice, // Set the total price here
+        total: totalPrice, 
       });
       setBasketCount((prev) => prev + quantity);
     } else {
       const quantityChange = quantity - parsedUser.basket[itemIndex].quantity;
       parsedUser.basket[itemIndex].quantity = quantity;
-      parsedUser.basket[itemIndex].total = totalPrice; // Update the total price
+      parsedUser.basket[itemIndex].total = totalPrice; 
       setBasketCount((prev) => prev + quantityChange);
     }
   
@@ -289,7 +289,7 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
     setShowCount(true);
   };
   const updatedPrice = () => {
-    return (quantity * dynamicPrice).toFixed(2); // Calculate total price based on quantity and dynamic price
+    return (quantity * dynamicPrice).toFixed(2);
   };
   
   // const handleAddToCartClick = () => {
@@ -474,7 +474,6 @@ const CardComp = ({ type, price, ingredients, name, image, id }) => {
                   ></button>
                 </div>
 
-                // Miktar Kontrolleri
                 // <div className="cart-item-controls">
                 //   <div className="quantity-controls">
                 //     <button

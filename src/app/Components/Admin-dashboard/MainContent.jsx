@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Rating } from "@mui/material";
-// import OrdersTable from "./OrdersTable";
-// import Todos from "./Todos";
+
 
 const MainContent = () => {
   
-  const [data, setData] = useState([]); // State to store fetched data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [totalSum, setTotalSum] = useState(0); // State to store the total sum
-  const [userCount, setUserCount] = useState(0); // User sayı üçün state
-  const [orderCount, setOrderCount] = useState(0); // User sayı üçün state
-  const [menu, setMenu] = useState([]); // State to store fetched data
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true); 
+  const [totalSum, setTotalSum] = useState(0); 
+  const [userCount, setUserCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0); 
+  const [menu, setMenu] = useState([]);
 
   async function getData() {
     try {
       const response = await axios.get(
         "https://66eba56d2b6cf2b89c5b2e2d.mockapi.io/Delivery"
       );
-      console.log(response.data); // Log the response data
-      setLoading(false); // Set loading to false once data is fetched
+      console.log(response.data); 
+      setLoading(false); 
 
       setData(response.data);
       const sum = response.data.reduce(
@@ -29,8 +28,8 @@ const MainContent = () => {
       setTotalSum(sum);
       setOrderCount(response.data.length)
     } catch (error) {
-      console.error("Error fetching data:", error); // Log any errors
-      setLoading(false); // Set loading to false even on error
+      console.error("Error fetching data:", error); 
+      setLoading(false);
     }
   }
   async function getUser() {
@@ -38,14 +37,13 @@ const MainContent = () => {
       const response = await axios.get(
         "https://66eba35c2b6cf2b89c5b2596.mockapi.io/login"
       );
-      console.log(response.data); // Log the response data
-      setLoading(false); // Set loading to false once data is fetched
-
-      setUserCount(response.data.length); // User sayını hesablayırıq
+      console.log(response.data); 
+      setLoading(false); 
+      setUserCount(response.data.length); 
 
     } catch (error) {
-      console.error("Error fetching data:", error); // Log any errors
-      setLoading(false); // Set loading to false even on error
+      console.error("Error fetching data:", error); 
+      setLoading(false); 
     }
   }
   async function getMenu() {
@@ -53,14 +51,14 @@ const MainContent = () => {
       const response = await axios.get(
         "https://66eba35c2b6cf2b89c5b2596.mockapi.io/pizza"
       );
-      console.log(response.data); // Log the response data
-      setLoading(false); // Set loading to false once data is fetched
+      console.log(response.data); 
+      setLoading(false); 
       setMenu(response.data);
 
 
     } catch (error) {
-      console.error("Error fetching data:", error); // Log any errors
-      setLoading(false); // Set loading to false even on error
+      console.error("Error fetching data:", error);
+      setLoading(false);
     }
   }
   useEffect(() => {
@@ -93,7 +91,7 @@ const MainContent = () => {
                     defaultValue={item.rating}
                     sx={{
                       "& .MuiRating-icon": {
-                        fontSize: "2rem", // Adjust the size of the stars (increase or decrease)
+                        fontSize: "2rem",
                       },
                     }}
                     precision={0.5}
@@ -141,8 +139,59 @@ const MainContent = () => {
         </li>
       </ul>
       <div className="table-data">
-        {/* <OrdersTable /> */}
-        {/* <Todos /> */}
+      {data.map((item, index) => (
+                <div
+                  key={index}
+                  className="text border p-2 w-[23%] rounded-md min-w-[100px]"
+                >
+                  <div className="flex w-[100%] justify-center h-4">
+                    <Rating
+                      name="half-rating"
+                      className="absolute top-[-25px]"
+                      defaultValue={item.rating}
+                      sx={{
+                        "& .MuiRating-icon": {
+                          fontSize: "1.5rem",
+                          "@media (min-width: 990px)": {
+                            fontSize: "2rem",
+                          },
+                          "@media (min-width: 1200px)": {
+                            fontSize: "2.5rem", 
+                          },
+                        },
+                      }}
+                      precision={0.5}
+                      readOnly
+                    />
+                  </div>
+                  <p className="break-words">
+                    <span>Total:</span> {item.ordersData[0].spent}
+                  </p>
+                  <p className="break-words">
+                    <span>Date:</span>{" "}
+                    {item.ordersData[0].date && (
+                      <span className="break-words">
+                        <span>{item.ordersData[0].date.slice(0, 4)}</span>{" "}
+                        <span>{item.ordersData[0].date.slice(4, 10)}</span>{" "}
+                        {/* First 4 digits */}
+                        {/* Next 6 digits */}
+                      </span>
+                    )}
+                  </p>
+                  <p className="break-words">
+                    <span>Content:</span> {item.content}
+                  </p>{" "}
+                  {/* Display the name */}
+                  <p className="break-words">
+                    <span>Location:</span>
+                    {item.location}
+                  </p>
+                  <p className="break-words">
+                    <span>Duration:</span>
+                    {item.totalDuration}
+                  </p>
+                </div>
+              ))}
       </div>
     </main>
   );

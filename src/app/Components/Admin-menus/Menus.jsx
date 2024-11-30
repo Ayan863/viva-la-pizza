@@ -1,5 +1,5 @@
 "use client";
-
+import { FaPen } from "react-icons/fa";
 import * as React from "react";
 import Box from "@mui/joy/Box";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
@@ -24,21 +24,17 @@ import { GrRestaurant } from "react-icons/gr";
 import { GiSaucepan } from "react-icons/gi";
 import { AspectRatio, Card, TabPanel, TextField, Typography } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
-// import { getProduct } from "@/app/redux/feature/product/ProductSlice";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
-// import { getProduct } from "@/app/redux/feature/product/ProductSlice.jsx";//basqa hardasa productslice istifade
 import {
   getProduct,
   editProduct,
   deleteProduct,
   addProduct,
-} from "../../redux/feature/product/ProductSlice.js"; //basqa hardasa productslice istifade
-// bumu reduxdaki hisseler eslinde js ile olsaydi yaxsi olardi cunki sadeca js emeliyyatlari var ama html de olsaydi onda jsx tamam?
+} from "../../redux/feature/product/ProductSlice.js";
 export const setItemToLocalStorage = (key, data) => {
   let existingData = JSON.parse(localStorage.getItem(key)) || [];
 
-  // Məhsul varsa, onu yeniləyirik
   existingData = existingData.map((item) =>
     item.id === data.id ? { ...item, ...data } : item
   );
@@ -62,7 +58,6 @@ const OurMenuTab = () => {
     image: "",
   });
   const safeValue = Array.isArray(value) ? value : [];
-  // const price = selectedItem.price[0] !== undefined ? selectedItem.price[0] : 0;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,12 +66,8 @@ const OurMenuTab = () => {
       [name]: name === "price" ? value.split(",").map((v) => v.trim()) : value,
     }));
   };
-  
-  
-  
-    const [createModalOpen, setCreateModalOpen] = React.useState(false);
 
-  // Funksiyalar
+  const [createModalOpen, setCreateModalOpen] = React.useState(false);
 
   const handleCreateModalOpen = () => setCreateModalOpen(true);
   const handleCreateModalClose = () => setCreateModalOpen(false);
@@ -94,26 +85,21 @@ const OurMenuTab = () => {
   };
   const handleEditProduct = (e) => {
     e.preventDefault();
-    
-    // Inputlardan verilən məlumatları götürürük
+
     const updatedProduct = {
       ...selectedItem,
     };
-    
-    // Redux əməliyyatını çağırırıq
+
     dispatch(editProduct(updatedProduct))
       .then(() => {
-        // Yeniləmə uğurla başa çatdıqda modalı bağlayırıq
         setOpen(false);
-        // Məsələn, istifadəçiyə bildiriş göstərə bilərik
       })
       .catch((error) => {
-        // Hata baş verərsə, istifadəçiyə bildiriş göstəririk
-        console.error('Redaktə zamanı səhv:', error);
+        console.error("Redaktə zamanı səhv:", error);
       });
-    };
-    const handleClose = () => setOpen(false);
-    React.useEffect(() => {
+  };
+  const handleClose = () => setOpen(false);
+  React.useEffect(() => {
     if (reduxProducts.length === 0) {
       dispatch(getProduct());
     }
@@ -126,32 +112,26 @@ const OurMenuTab = () => {
     setLocalProducts(updatedProducts);
     saveToLocalStorage("products", updatedProducts);
 
-    // Redux-da da silinməsi üçün
     dispatch(deleteProduct(id));
   };
   const saveToLocalStorage = (key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
   };
-  
-  // İlk dəfə məhsulları yükləyərkən
+
   React.useEffect(() => {
     const storedProducts = loadFromLocalStorage("products");
     if (storedProducts.length > 0) {
       setLocalProducts(storedProducts);
     } else {
-      // Əgər localStorage boşdursa, backend-dən məhsulları al
       getProduct();
     }
   }, []);
-  
-  
-  
-  
+
   const handleAddProduct = (e) => {
     e.preventDefault();
 
     const newProduct = {
-      id: Date.now(), // Unikal ID üçün timestamp istifadə edə bilərsiniz
+      id: Date.now(),
       name: e.target.name.value,
       ingredients: e.target.ingredients.value || "-",
       price: [parseFloat(e.target.price.value).toFixed(2)],
@@ -159,52 +139,56 @@ const OurMenuTab = () => {
       type: e.target.type.value || "other",
     };
 
-    // LocalStorage-ə əlavə et
     const updatedProducts = [...localProducts, newProduct];
     setLocalProducts(updatedProducts);
     saveToLocalStorage("products", updatedProducts);
 
-    // Redux vasitəsilə API-ə göndər
     dispatch(addProduct(newProduct));
 
-    // Input sahələrini sıfırla
     e.target.reset();
   };
   const handleSaveChanges = (e) => {
-    e.preventDefault(); // Formun yenidən yüklənməsinin qarşısını alır
+    e.preventDefault();
     const { target } = e;
+  
+    console.log(target);
+  
     if (target) {
+      const priceValue = target.price.value;
+      console.log("Price Value:", priceValue);
+  
+      const price = priceValue ? parseFloat(priceValue) : 0;
+  
+      console.log("Selected Item:", selectedItem);
+  
       const updatedProduct = {
-        id: selectedItem.id, // Make sure selectedItem is not undefined
+        id: selectedItem.id,
         name: selectedItem.name,
         type: selectedItem.type,
         status: selectedItem.status,
-        price: parseFloat(target.price.value) || 0,
+        price,
         ingredients: selectedItem.ingredients,
         image: selectedItem.image,
       };
   
       dispatch(editProduct(updatedProduct))
-    
-    .then(() => {
-      // Uğurla yeniləndikdən sonra localStorage-da da saxlayın
-      const currentProducts = JSON.parse(localStorage.getItem("products")) || [];
-      const updatedProducts = currentProducts.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      );
-      localStorage.setItem("products", JSON.stringify(updatedProducts));
-
-      // Uğurla yeniləndikdən sonra modalı bağlayın
-      setOpen(false);
-    })
-    .catch((error) => {
-      // Hata baş verərsə, bildiriş göstərin
-      console.error("Redaktə zamanı səhv:", error);
-    });
-  };
-}
+        .then(() => {
+          const currentProducts = JSON.parse(localStorage.getItem("products")) || [];
+          console.log("Current Products:", currentProducts);
   
-
+          const updatedProducts = currentProducts.map((product) =>
+            product.id === updatedProduct.id ? updatedProduct : product
+          );
+          localStorage.setItem("products", JSON.stringify(updatedProducts));
+  
+          setOpen(false);
+        })
+        .catch((error) => {
+          console.error("Error during update:", error);
+        });
+    }
+  };
+  
   const getApi = (name) => {
     if (loading) {
       return (
@@ -249,11 +233,11 @@ const OurMenuTab = () => {
         ? value.filter((item) => item.type.toLowerCase() == name.toLowerCase())
         : value;
     return (
-      <div className="flex flex-wrap gap-5 items-center justify-around">
+      <div className="flex flex-wrap xl:gap-5 items-center justify-around xl:w-full">
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
             <div
-              className="card flex w-[47%] h-[100px] items-center justify-between p-2 border-4	rounded-sm	border-s-[#c46d6d]	border-y-transparent border-e-transparent	"
+              className="card relative flex flex-col xl:flex-row xl:w-[47%] w-full xl:h-[100px] items-center justify-between p-4 border-4 rounded-sm border-s-[#c46d6d] border-y-transparent border-e-transparent"
               key={item.id}
             >
               <img
@@ -261,39 +245,32 @@ const OurMenuTab = () => {
                 alt={item.name}
                 className="w-[90px] h-[90px] m-2"
               />
-              <div className="title w-[50%]">
-                <p className="name">{item.name}</p>
-                <span className="ingredients">
+              <div className="title   w-full xl:w-[50%] text-center max-w-[200px] xl:text-left">
+                <p className="name font-sans text-lg font-semibolds max-w-[200px] break-words">
+                  {item.name}
+                </p>
+                <span className="ingredients font-mono text-sm break-words">
                   {item.ingredients !== "-" ? item.ingredients : null}
                 </span>
               </div>
-              <div className="price">
-                <span>
-                  {item.price[0]
-                    ? item.price[0]
-                    : item.price}
-                  ₼
-                </span>
+              <div className="price font-mono text-sm break-words">
+                <span>{item.price[0] ? item.price[0] : item.price}₼</span>
               </div>
-              
-                <Button onClick={() => handleOpen(item)}>Edit</Button>
+
+              <button
+                className="absolute right-[-10px] text-red-900"
+                onClick={() => handleOpen(item)}
+              >
+                <FaPen />
+              </button>
               <button
                 onClick={() => handleDelete(item.id)}
-                className="delete-btn bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                className="delete-btn text-red-500  rounded-full w-8 h-8 flex items-center justify-center absolute right-[-21px] top-[-4px]"
               >
                 <TiDelete />
               </button>
             </div>
-            // <CardComp
-            //   key={item.id}
-            //   type={item.type}
-            //   status={item.status}
-            //   price={item.price}
-            //   ingredients={item.ingredients}
-            //   name={item.name}
-            //   image={item.image}
-            //   id={item.id}
-            // />
+
           ))
         ) : (
           <div>No items found for the specified name.</div>
@@ -419,7 +396,6 @@ const OurMenuTab = () => {
                 backgroundColor: "white",
                 padding: 4,
                 borderRadius: 2,
-                // width: 400,
                 boxShadow: 24,
               }}
             >
@@ -431,7 +407,8 @@ const OurMenuTab = () => {
 
                   <form
                     onSubmit={(e) => {
-                      handleEditProduct(e);
+                      // handleEditProduct(e);
+                      handleSaveChanges(e)
                       setOpen(false);
                     }}
                   >
@@ -465,7 +442,7 @@ const OurMenuTab = () => {
                             <Input
                               label="price"
                               name="price"
-                              value={selectedItem.price.join(", ")}
+                              value={selectedItem.price}
                               onChange={handleInputChange}
                               fullWidth
                               margin="normal"
@@ -508,25 +485,17 @@ const OurMenuTab = () => {
                           </FormControl>
                         </div>
                       </div>
-                      {/* <Button type="submit" onclick={() => setOpen(false)}>
-                        Submit
-                      </Button> */}
-                  <Button
-                      onClick={(e) => {
-                        handleSaveChanges(e);
-                        setOpen(false);
-                      }}
-                    variant="contained"
-                    // color="primary"
-                    sx={{ marginTop: 2 }}
-                    type="submit"
-                  >
-                    Save Changes
-                  </Button>
+                      <Button
+                        
+                        variant="contained"
+                        sx={{ marginTop: 2 }}
+                        type="submit"
+                      >
+                        Save Changes
+                      </Button>
                     </Stack>
                   </form>
 
-                  {/* Save Button */}
                 </div>
               )}
             </Box>
@@ -540,7 +509,7 @@ const OurMenuTab = () => {
               <form
                 onSubmit={(e) => {
                   handleAddProduct(e);
-                  handleCreateModalClose(); // Modalı bağlamaq
+                  handleCreateModalClose(); 
                 }}
               >
                 <Stack spacing={2}>

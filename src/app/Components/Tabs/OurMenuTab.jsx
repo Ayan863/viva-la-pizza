@@ -14,7 +14,7 @@ import { AspectRatio, Card, TabPanel, Typography } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
 import CardComp from "../Card/Card";
 import Skeleton from "@mui/joy/Skeleton";
-import { getProduct } from "../../redux/feature/product/ProductSlice.js";//basqa hardasa productslice istifade
+import { getProduct } from "../../redux/feature/product/ProductSlice.js";
 const OurMenuTab = () => {
   const [index, setIndex] = React.useState(0);
   const colors = ["primary", "danger", "success", "warning"];
@@ -82,16 +82,7 @@ const OurMenuTab = () => {
                     <span>{(item.price[0] ? item.price[0].toFixed(2) : item.price.toFixed(2))}₼</span>
                 </div>
             </div>
-            // <CardComp
-            //   key={item.id}
-            //   type={item.type}
-            //   status={item.status}
-            //   price={item.price}
-            //   ingredients={item.ingredients}
-            //   name={item.name}
-            //   image={item.image}
-            //   id={item.id}
-            // />
+            
           ))
         ) : (
           <div>No items found for the specified name.</div>

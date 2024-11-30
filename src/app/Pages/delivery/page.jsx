@@ -76,7 +76,7 @@ export default function Delivery() {
     const allFieldsFilled =
       data.detailedAddress.trim() &&
       data.phoneNumber.trim() &&
-      data.location !== null; // Ensure location is selected
+      data.location !== null; 
     setIsButtonDisabled(!allFieldsFilled);
   };
 
@@ -95,13 +95,12 @@ export default function Delivery() {
     console.log("updatedData", updatedData);
     console.log("ordersData", ordersData);
   
-    // Add `name` and `phoneNumber` from `formData` to the delivery object
     updatedData.delivery = {
       content: text,
       rating: value,
       location: formData.detailedAddress,
-      phoneNumber: formData.phoneNumber, // Add phone number
-      name: updatedData.name || "Default Name", // Add name (or fallback to a default value if missing)
+      phoneNumber: formData.phoneNumber, 
+      name: updatedData.name || "Default Name",
       totalDuration: randomTime,
       ordersData,
     };
@@ -115,13 +114,12 @@ export default function Delivery() {
         console.log("First API Response:", response.data);
         toast.success("Data successfully updated");
   
-        // Second API POST request to include name and phone number
         return axios.post("https://66eba56d2b6cf2b89c5b2e2d.mockapi.io/Delivery", updatedData.delivery);
       })
       .then((deliveryResponse) => {
         console.log("Second API Response:", deliveryResponse.data);
         toast.success("Delivery data successfully added!");
-        router.push('/'); // Navigate to the home page
+        router.push('/');
       })
       .catch((error) => {
         console.error("Error occurred:", error);

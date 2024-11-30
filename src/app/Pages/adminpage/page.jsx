@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import './login.css';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-// import AdminLayout from "./layouts/AdminLayout"; // Admin Layout'u import et
+
 
 const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState(null);

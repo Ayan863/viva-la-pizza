@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
@@ -11,70 +11,73 @@ const Haqqimizda = () => {
   return (
     <>
       <Header />
+      <div>
+      <div className="about-welcome">
+        <Smallintro
+          text={["Welcome to Viva La Pizza"]}
+          image={[
+            "https://pizza.az/upload/iblock/a4f/a4f20aa25ee40582db412e8b36db5321.jpg",
+          ]}
+        />
+      </div>
+      <div className="about-text2 mx-auto px-6 py-12">
+  <h2 className="pa-h2 text-4xl font-extrabold text-center text-gray-800 mb-6">
+    About Us
+  </h2>
+  <p className="hp-p1 text-lg text-gray-700 leading-relaxed mb-6">
+    At Viva La Pizza, we believe that every slice tells a story—a story
+    of fresh ingredients, time-honored recipes, and a passion for
+    delivering the perfect pizza experience. Founded with the vision of
+    bringing authentic Italian flavors to your table, we pride ourselves
+    on using only the finest ingredients. From hand-tossed dough made
+    fresh daily to our signature sauces and premium toppings, every
+    pizza is crafted with love and care.
+  </p>
+  <p className="hp-p2 text-lg text-gray-700 leading-relaxed">
+    Our mission is simple: to share the joy of pizza with our community.
+    Whether you're dining in with family, celebrating a special
+    occasion, or enjoying a quick bite, we strive to make every moment
+    memorable. Thank you for choosing Viva La Pizza. Together, let's
+    create delicious memories, one slice at a time!
+  </p>
+</div>
+
       <div className="about-main">
-        <div className="about-welcome">
-        <Smallintro text={["Mercedes-Benz Azərbaycana xoş gəldiniz"]} image={["https://d2638j3z8ek976.cloudfront.net/global-css-files/20241021-114056/images/placeholders/XeG191GlSB.jpg"]}/>
+        <div className="about-videoo">
+          <video
+            className="video w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+            poster="/pizza-video-placeholder.jpg"
+          >
+            <source src="/pizza-video.mp4" type="video/mp4" />
+          </video>
+        </div>
+
         
-        </div>
-        <div className="about-text2">
-          <h2 className="pa-h2">Haqqımızda</h2>
-          <p className="hp-p1">
-            “Avtokapital-Azərbaycan” MMC – Mercedes-Benz Group AG-nin
-            Mercedes-Benz markalı avtomobilləri üzrə Azərbaycandakı Rəsmi
-            Nümayəndəliyi.
-          </p>
-          <p className="hp-p2">
-            Bizim məqsədimiz – şirkətin müştərilərinə qayğı göstərmək, ən yüksək
-            səviyyəli xidməti təmin etmək, habelə şirkətə istedadlı
-            mütəxəssisləri cəlb etmək, müştərilərin maraqlarına uyğun olaraq,
-            kollektiv yaradıcılıq potensialının həyata keçirilməsinə imkan
-            yaratmaq.
-          </p>
-        </div>
         <div className="about-picture">
           <img
-            src="https://images.netdirector.co.uk/gforces-auto/image/upload/w_410,h_273,q_auto,c_fill,f_auto,fl_lossy/auto-client/ab06f500c60f00c40c6ba64979088acd/step_1x1x.jpg"
+          className="object-cover"
+            src="https://pizza.az/upload/iblock/cd2/cd213e6cb1c83918a649ab9343db3a88.jpg"
             alt="Picture 1"
           />
           <img
-            src="https://images.netdirector.co.uk/gforces-auto/image/upload/w_410,h_273,q_auto,c_fill,f_auto,fl_lossy/auto-client/aa68160eecd71899719e41d2be62b61c/step_3_1x1.jpg"
+          className="object-cover"
+            src="https://pizza.az/upload/iblock/cd2/cd213e6cb1c83918a649ab9343db3a88.jpg"
             alt="Picture 2"
           />
           <img
-            src="https://images.netdirector.co.uk/gforces-auto/image/upload/w_410,h_273,q_auto,c_fill,f_auto,fl_lossy/auto-client/3d87344ed98cef5ea497373769528c26/general_jump.jpg"
+          className="object-cover"
+            src="https://pizza.az/upload/iblock/be4/be490d36a7478c90ad4b19baee796ffc.jpg"
             alt="Picture 3"
           />
         </div>
-        <div className="about-video">
-          {!isVideoPlaying ? (
-            <>
-              <img
-                className="about-video-thumbnail"
-                src="https://images.netdirector.co.uk/gforces-auto/image/upload/w_1269,h_423,q_auto,c_fill,f_auto,fl_lossy/auto-client/d04ce17289e0e4c70dff9be7685717af/buy_online.jpg"
-                alt="Video Thumbnail"
-              />
-              <div
-                className="about-play-button"
-                onClick={() => setIsVideoPlaying(true)}
-              >
-                ▶
-              </div>
-            </>
-          ) : (
-            <iframe
-              className="about-video-frame"
-              src="https://www.youtube.com/embed/nV1MIqp81fY"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title="YouTube Video"
-            ></iframe>
-          )}
-        </div>
+      </div>
       </div>
       <Footer />
     </>
-  );
+  )
 };
 
 export default Haqqimizda;

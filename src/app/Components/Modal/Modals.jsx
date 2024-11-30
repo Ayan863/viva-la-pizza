@@ -37,12 +37,12 @@ const Modals = ({
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         const item = parsedUser.basket.find((item) => item.id === id);
-        return item ? item.quantity : 1; // Sepette varsa miktarını al, yoksa 1
+        return item ? item.quantity : 1; 
       }
     } catch (error) {
       console.error("Error reading from localStorage:", error);
     }
-    return 1; // Hata durumunda varsayılan 1
+    return 1; 
   };
   const getInitialSize = () => {
     try {
@@ -50,27 +50,27 @@ const Modals = ({
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         const item = parsedUser.basket.find((item) => item.id === id);
-        return item ? item.size : "regular"; // Sepette varsa boyutunu al, yoksa "regular"
+        return item ? item.size : "regular"; 
       }
     } catch (error) {
       console.error("Error reading from localStorage:", error);
     }
-    return "regular"; // Hata durumunda varsayılan değer
+    return "regular"; 
   };
   const [valueSize, setValueSize] = React.useState("")
-  const [valueSlice, setValueSlice] = React.useState(getInitialSize); // Başlangıç değeri dinamik
+  const [valueSlice, setValueSlice] = React.useState(getInitialSize); 
   const getInitialValue = () => {
     try {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         const item = parsedUser.basket.find((item) => item.id === id);
-        return item ? item.size : "small"; // Sepette varsa boyutunu al, yoksa "small"
+        return item ? item.size : "small"; 
       }
     } catch (error) {
       console.error("Error reading from localStorage:", error);
     }
-    return "small"; // Hata durumunda varsayılan değer
+    return "small";
   };
 
   const [value, setValue] = useState(getInitialValue);
@@ -92,7 +92,7 @@ const Modals = ({
           newPrice = price[2];
           break;
         default:
-          newPrice = 0; // Varsayılan fiyat
+          newPrice = 0;
       }
       setDynamicPrice(newPrice);
       const storedUser = localStorage.getItem("user");
@@ -262,13 +262,13 @@ const Modals = ({
       const itemIndex = parsedUser.basket.findIndex((item) => item.id === id);
 
       if (itemIndex !== -1) {
-        setValue(itemIndex.size); // Boyutu ayarla
+        setValue(itemIndex.size); 
 
         parsedUser.basket[itemIndex].quantity = quantity;
         parsedUser.basket[itemIndex].total = (quantity * dynamicPrice).toFixed(
           2
         );
-        setValueSlice(parsedUser.basket[itemIndex].size); // Boyutu güncelle
+        setValueSlice(parsedUser.basket[itemIndex].size); 
 
         localStorage.setItem("user", JSON.stringify(parsedUser));
         setQuantity(parsedUser.basket[itemIndex].quantity);
@@ -365,13 +365,11 @@ const Modals = ({
                   exclusive
                   onChange={handleSizeChange}
                   sx={{
-                    // display: "flex",
-                    // flexWrap: "wrap",
                     gap: 1,
                   }}
                 >
                   <Button
-                    key="small" // key ekleyin
+                    key="small"
                     className={`btn ${value === "small" ? "selected" : ""}`}
                     value="small"
                     selected={value === "small"}
@@ -388,7 +386,7 @@ const Modals = ({
                     </div>
                   </Button>
                   <IconButton
-                    key="medium" // key ekleyin
+                    key="medium"
 
                     className={`btn ${value === "medium" ? "selected" : ""}`}
                     value="medium"
@@ -406,7 +404,7 @@ const Modals = ({
                     </div>
                   </IconButton>
                   <IconButton
-                    key="large" // key ekleyin
+                    key="large"
                     className={`btn ${value === "large" ? "selected" : ""}`}
                     value="large"
                     selected={value === "large"}
@@ -427,7 +425,7 @@ const Modals = ({
               <div className="select">
                 <p>SELECT SLICE</p>
                 <ToggleButtonGroup
-                  value={valueSlice} // Dilim state'i
+                  value={valueSlice}
                   exclusive
                   onChange={handleSliceChange}
                   sx={{
@@ -526,11 +524,11 @@ const Modals = ({
                       p: 2,
                       minWidth: 120,
                       position: "relative",
-                      width: "130px", // Şəkilin genişliyi
-                      height: "65px", // Şəkilin hündürlüyü
+                      width: "130px", 
+                      height: "65px", 
                       backgroundImage:
                         'url("https://s3.eu-west-3.amazonaws.com/ppost/Mozzarella-Edge.png")',
-                      backgroundSize: "cover", // Cover şəkil ölçüləri ilə uyğunlaşdıracaq
+                      backgroundSize: "cover", 
                       backgroundPosition: "center",
                       justifyContent: "flex-end",
                     }}
@@ -569,8 +567,8 @@ const Modals = ({
                       p: 2,
                       minWidth: 120,
                       position: "relative",
-                      width: "130px", // Şəkilin genişliyi
-                      height: "65px", // Şəkilin hündürlüyü
+                      width: "130px", 
+                      height: "65px", 
                       backgroundImage:
                         'url("https://s3.eu-west-3.amazonaws.com/ppost/Sausage-Edge.png")',
                       backgroundSize: "cover",
@@ -612,8 +610,8 @@ const Modals = ({
                       p: 2,
                       minWidth: 120,
                       position: "relative",
-                      width: "130px", // Şəkilin genişliyi
-                      height: "65px", // Şəkilin hündürlüyü
+                      width: "130px", 
+                      height: "65px",
                       backgroundImage:
                         'url("https://s3.eu-west-3.amazonaws.com/ppost/Parmesan-Edge.png")',
                       backgroundSize: "cover",

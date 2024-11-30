@@ -14,7 +14,6 @@ const Admin = () => {
   const [isDarkMode, setDarkMode] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
 
-  // Ekran boyutuna göre sidebar görünümünü ayarlama
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 576) {
@@ -27,7 +26,6 @@ const Admin = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Aktif sayfaya göre içerik render fonksiyonu
   const renderContent = () => {
     switch (activePage) {
       case "dashboard":
@@ -47,14 +45,14 @@ const Admin = () => {
     <>
       <section id="sidebar" className={isSidebarHidden ? "hide" : ""}>
         <a href="#" className="brand">
-          <span className="text p-3">Viva La Pizza</span>
+          <span className="text p-3 text-red-600">Viva La Pizza</span>
         </a>
         <ul className="side-menu top">
           {["dashboard", "Clients", "Orders", "Menus"].map((menu) => (
             <li
               key={menu}
               className={activePage === menu ? "active" : ""}
-              onClick={() => setActivePage(menu)} // Aktif sayfayı güncelle
+              onClick={() => setActivePage(menu)} 
             >
               <a href="#">
                 <span className="text">
@@ -66,7 +64,6 @@ const Admin = () => {
         </ul>
       </section>
 
-      {/* Ana içerik */}
       <section id="content">
         <Navbar
           toggleSidebar={() => setSidebarHidden((prev) => !prev)}
@@ -76,7 +73,6 @@ const Admin = () => {
         {renderContent()}
       </section>
 
-      {/* Karanlık Mod Anahtarı */}
       <DarkModeSwitch isDarkMode={isDarkMode} toggleDarkMode={setDarkMode} />
     </>
   );

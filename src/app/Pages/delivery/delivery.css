@@ -9,25 +9,20 @@
     font-family: 'Arial', sans-serif;
   }
   
-  /* Başlıq */
   .delivery-title {
     text-align: center;
     color: #333;
   }
-  
-  /* Hissə başlıqları */
   .section-title {
     color: #666;
     margin-bottom: 10px;
   }
   
-  /* Sifariş xülasəsi */
   .order-summary p,
   .delivery-info p {
     margin: 5px 0;
   }
   
-  /* Zaman sayacının dairəsi */
   .timer-circle {
     position: relative;
     width: 100px;
@@ -40,7 +35,6 @@
     align-items: center;
   }
   
-  /* Zamanın mətni */
   .timer-text {
     font-size: 20px;
     font-weight: bold;
@@ -56,16 +50,16 @@
     font-family: inherit;
   }
   .delivery h2 {
-    font-size: 2rem; /* Başlık boyutu */
+    font-size: 2rem;
     margin-bottom: 10px;
   }
   
   .delivery h3 {
-    font-size: 1.5rem; /* Alt başlık boyutu */
+    font-size: 1.5rem; 
     margin-bottom: 8px;
   }
   
   .delivery p {
-    font-size: 1rem; /* Paragraf boyutu */
+    font-size: 1rem;
     line-height: 1.6;
   }

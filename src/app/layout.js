@@ -2,7 +2,7 @@
 
 import "./globals.css";
 import Head from "next/head";
-import { store } from "./redux/app/store"; // Make sure this path is correct
+import { store } from "./redux/app/store";
 import { Provider } from "react-redux";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";

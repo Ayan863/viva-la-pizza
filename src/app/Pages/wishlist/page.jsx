@@ -20,7 +20,7 @@ const Page = () => {
             setWishlistData(parsedUser.wishlist || []);
           } catch (error) {
             console.error("Error parsing user data:", error);
-            setWishlistData([]); // Set to empty array if data is invalid
+            setWishlistData([]); 
           }
         }
       }

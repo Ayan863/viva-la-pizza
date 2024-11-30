@@ -4,9 +4,9 @@
 }
 .name-modal {
   padding-bottom: 10px !important;
-  font-size: 45px !important;
-  color: rgb(165, 59, 59) !important;
-  font-family: "Beyond The Mountains", sans-serif !important;
+  font-size: 45px;
+  color: rgb(165, 59, 59);
+  font-family: "Beyond The Mountains", sans-serif;
 }
 .quantity-controls {
   display: flex;

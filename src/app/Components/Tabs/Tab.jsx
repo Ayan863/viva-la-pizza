@@ -22,7 +22,7 @@ const TabPanels = () => {
   const { value, loading } = useSelector((state) => state.product);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [sortOrder, setSortOrder] = React.useState("default");
-  const [sortType, setSortType] = React.useState("name"); // Default olaraq ada görə sıralama
+  const [sortType, setSortType] = React.useState("name"); 
 
   const dispatch = useDispatch();
   React.useEffect(() => {

@@ -134,7 +134,7 @@ const Header = () => {
         />
         <div className="md:hidden flex items-center">
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)} // Menü durumu değiştir
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-white"
           >
             <div className="space-y-2">
