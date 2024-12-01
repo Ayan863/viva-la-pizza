@@ -1,3 +1,4 @@
+"use client";
 import { Modal, ModalClose, ModalDialog, Typography } from "@mui/joy";
 import React, { useEffect, useState, useCallback } from "react";
 import "./modal.css";

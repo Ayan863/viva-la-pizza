@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Button, FormControl, FormLabel, Input, Modal, ModalClose, Sheet, Stack, TabPanel, Typography } from "@mui/joy";
 import React from "react";
 import Tabs from "@mui/joy/Tabs";

@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination,Navigation, Scrollbar, A11y, Autoplay  } from 'swiper/modules';

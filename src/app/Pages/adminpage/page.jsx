@@ -190,9 +190,7 @@ const Login = () => {
                 <FaGoogle className="g media" />
               </div>
             </div>
-            <div className="sign">
-              <Link href="./../../Pages/signup">Or Sign Up</Link>
-            </div>
+            
           </div>
         </div>
       </div>

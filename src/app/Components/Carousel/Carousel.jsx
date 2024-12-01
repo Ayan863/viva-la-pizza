@@ -6,6 +6,8 @@ import { Navigation, Scrollbar, A11y, Autoplay } from "swiper/modules";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { MdOutlineMenuBook } from "react-icons/md";
+import Link from "next/link";
+
 import "./carousel.css";
 const Carousel = () => {
   return (
@@ -36,8 +38,8 @@ const Carousel = () => {
             </h5>
             <h1 className="text-4xl font-bold font-beyond">Pizza & Pasta</h1>
             
-            <button className="px-8 py-4 bg-red-600 text-white font-medium rounded-2xl hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg">
-        <FaShoppingCart /> Today's Menu
+            <button  className="px-8 py-4 bg-red-600 text-white font-medium rounded-2xl hover:bg-red-700 transition duration-300 flex items-center justify-center gap-2 shadow-lg">
+        <FaShoppingCart /> <Link href="../../Pages/menu">Today's Menu</Link>
       </button>
           </div>
         </SwiperSlide>

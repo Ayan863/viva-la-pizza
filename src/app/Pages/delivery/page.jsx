@@ -46,6 +46,8 @@ export default function Delivery() {
   const [text, setText] = React.useState("");
   const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
   const [userData, setUserData] = useState(null);
+  const [ordersData, setOrdersData] = useState(null);
+
   const [totalAmount, setTotalAmount] = useState(0);
   const [formData, setFormData] = useState({
     detailedAddress: "",
@@ -91,10 +93,8 @@ export default function Delivery() {
     const userData = localStorage.getItem("user");
     const updatedData = JSON.parse(userData) || {};
     const ordersData = updatedData.orders || [];
-  
     console.log("updatedData", updatedData);
-    console.log("ordersData", ordersData);
-  
+    
     updatedData.delivery = {
       content: text,
       rating: value,
@@ -105,8 +105,10 @@ export default function Delivery() {
       ordersData,
     };
     updatedData.orders = [];
-  
+    
     localStorage.setItem("user", JSON.stringify(updatedData));
+    setOrdersData(updatedData.orders )
+    console.log("ordersData", ordersData);
   
     axios
       .put(`https://66eba35c2b6cf2b89c5b2596.mockapi.io/login/${updatedData.id}`, updatedData)
@@ -228,20 +230,20 @@ export default function Delivery() {
       <Toaster />
       <div
         style={{
-          maxWidth: "600px",
+          maxWidth: "650px",
           margin: "50px auto",
           padding: "20px",
           backgroundColor: "#fff",
-          borderRadius: "8px",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+          // borderRadius: "8px",
+          // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <h2>Pizza Delivery</h2>
-        <div className="flex">
-          <div className="personal info">
+        <h2 className="text-2xl font-bold mb-6">Pizza Delivery</h2>
+        <div className="flex flex-col lg:flex-row gap-6">
+              <div className="w-[600px] p-4 bg-white shadow-md rounded-md">
+                <div className="">
+          <div className="personal info ">
             <div>
-              <div>
-                <div>
                   {groupedItems.pizza && (
                     <p>
                       <strong>Pizza:</strong> {groupedItems.pizza.join(" ")}
@@ -257,35 +259,38 @@ export default function Delivery() {
                       <strong>Sous:</strong> {groupedItems.sous.join(" ")}
                     </p>
                   )}
+                  <p><strong>Total:</strong>{userData.orders[0].spent}</p>
                 </div>
               </div>
             </div>
             <div>
               <p>
                 <strong>Name:</strong> {userData.name}
+              </p><p>
+                <strong>Gmail:</strong> {userData.email}
               </p>
               <p>
-                <label>
+                <label className="flex">
                   <strong>Phone Number:</strong>
                   <input
                     type="tel"
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
+                    className="mt-1 p-1 border rounded-md"
                   />
                 </label>
               </p>
-              <p>
-                <strong>Gmail:</strong> {userData.email}
-              </p>
+              
               <div>
-                <label className="flex">
-                  Detailed Address:
+                <label className="flex items-center">
+                <strong>Detailed Address:</strong>
                   <input
                     type="text"
                     name="detailedAddress"
                     value={formData.detailedAddress}
                     onChange={handleInputChange}
+                    className="mt-1 p-1 border rounded-md"
                   />
                 </label>
               </div>
@@ -299,29 +304,24 @@ export default function Delivery() {
               disabled={isButtonDisabled}
               onClick={handleButtonClick}
               style={{ marginTop: "20px", display: "block" }}
+              className={`mt-6 px-4 py-2 bg-gray-300 text-white rounded-md ${
+                isButtonDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600"
+              }`}
             >
               Submit
             </button>
           </div>
 
           {isTimerActive && (
-            <div className="time-remaining">
-              <button
-                onClick={handleButtonClick}
-                disabled={isButtonDisabled}
-                className={`submit-button ${
-                  isButtonDisabled ? "disabled" : ""
-                }`}
-              >
-                Start Timer
-              </button>
+            <div className="time-remaining flex flex-col items-center p-6 bg-gray-100 rounded-lg shadow-md">
+              
+              <h3 className="text-2xl font-semibold text-gray-800 mb-4">Delivery Time Remaining</h3>
               {isTimerActive && (
                 <div className="timer">
-                  <p>Timer is active! Your order is being processed...</p>
+                  <p>Your order is being processed...</p>
                   {/* Timer logic goes here */}
                 </div>
               )}
-              <h3>Delivery Time Remaining</h3>
 
               <div
                 style={{
@@ -373,7 +373,6 @@ export default function Delivery() {
               </div>
             </div>
           )}
-        </div>
         {showContent && (
           <div>
             <h3>Additional Content</h3>
@@ -421,7 +420,7 @@ export default function Delivery() {
                   {text.length} character(s)
                 </Typography>
               }
-              sx={{ minWidth: 300 }}
+              sx={{ minWidth: 200 }}
             />
             <Boxx sx={{ width: 200, display: "flex", alignItems: "center" }}>
               <Rating
@@ -444,10 +443,15 @@ export default function Delivery() {
                   {labels[hover !== -1 ? hover : value]}
                 </Boxx>
               )}
-              <button onClick={handleAddContent}>Add Content</button>
+              <div></div>
             </Boxx>
+              <button onClick={handleAddContent}
+                      className="ml-auto px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-green-600"
+
+              >Add Content</button>
           </div>
         )}
+        </div>
       </div>
     </section>
     <Footer/>

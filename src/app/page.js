@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import Login from "./Pages/login/page";
 import Carousel from "./Components/Carousel/Carousel";
 import CarouselMini from "./Components/Carousel/CarouselMini";
@@ -6,6 +6,13 @@ import OurMenuTab from "./Components/Tabs/OurMenuTab";
 import "./globals.css"
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
+export const metadata = {
+  title: "Viva-La-Pizza",
+  description: "Viva-La-Pizza",
+  icons: {
+    icon: "/cheaf.png",
+  },
+};
 export default function Home() {
   return (
     <>
@@ -26,7 +33,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Images Section */}
             <div className="flex gap-5 justify-center items-center">
               <img
                 src="https://opencart.templatetrip.com/OPCTM01/OPCTM013_pizza/image/catalog/demo/banners/cms-img-02.jpg"

@@ -1,3 +1,4 @@
+"use client";
 import React from 'react'
 import Tab from "../../Components/Tabs/Tab";
 import Header from '../../Components/Header/Header';
@@ -7,7 +8,7 @@ const Menu = () => {
   return (
     <>
     <Header/>
-    <section className='flex items-center justify-center w-[100%]'>
+    <section className='flex items-center justify-center w-[100%] min-h-[60vh]'>
       <Tab />
     </section>
     <Footer/>

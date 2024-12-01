@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, TabPanel, Tabs } from "@mui/joy";
 import React, { useEffect, useState } from "react";
 import Tab, { tabClasses } from "@mui/joy/Tab";

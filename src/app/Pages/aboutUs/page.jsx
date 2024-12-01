@@ -43,17 +43,7 @@ const Haqqimizda = () => {
 </div>
 
       <div className="about-main">
-        <div className="about-videoo">
-          <video
-            className="video w-full h-full object-cover"
-            autoPlay
-            loop
-            muted
-            poster="/pizza-video-placeholder.jpg"
-          >
-            <source src="/pizza-video.mp4" type="video/mp4" />
-          </video>
-        </div>
+        
 
         
         <div className="about-picture">

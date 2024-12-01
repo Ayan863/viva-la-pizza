@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoIosMail } from "react-icons/io";

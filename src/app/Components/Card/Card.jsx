@@ -1,3 +1,5 @@
+"use client";
+
 import "./card.css";
 import React, { useState, useEffect, useCallback } from "react";
 import Card from "@mui/joy/Card";
